@@ -1,4 +1,5 @@
-# 習慣化アプリの開発
+# study_habit_management
+習慣化管理アプリ作成
 
 ## 概要
 タスク管理と習慣化をサポートするWebアプリケーション
@@ -23,7 +24,7 @@ npm start
 
 ### 2. Frontend設定
 ```bash
-cd frontend/frontend
+cd frontend
 npm install
 npm run dev
 ```
