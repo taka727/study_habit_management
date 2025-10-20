@@ -1,0 +1,90 @@
+get:
+  tags:
+    - Tasks
+  summary: タスクIDで取得する
+  parameters:
+    - name: taskId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: 取得対象のタスクID
+  responses:
+    "200":
+      description: 正常に取得
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              taskTitle:
+                type: string
+              taskDescription:
+                type: string
+              status:
+                type: integer
+    "400":
+      description: バリデーションエラー
+    "500":
+      description: サーバーエラー
+put:
+  tags:
+    - Tasks
+  summary: タスクの内容を変更する
+  parameters:
+    - name: taskId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: 変更する対象のタスクID
+  requestBody:
+    description: タスク内容
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            taskTitle:
+              type: string
+            taskDescription:
+              type: string
+  responses:
+    "200":
+      description: 正常に取得
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              task_id:
+                type: integer
+              task_title:
+                type: string
+              status:
+                type: integer
+    "400":
+      description: サーバーエラー
+    "500":
+      description: サーバーエラー
+delete:
+  tags:
+    - Tasks
+  summary: タスクを削除する
+  parameters:
+    - name: taskId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: 削除する対象のタスクID
+  responses:
+    "204":
+      description: 削除成功（レスポンスボディなし）
+    "400":
+      description: サーバーエラー
+    "500":
+      description: サーバーエラー

@@ -1,0 +1,74 @@
+get:
+  tags:
+    - Tasks
+  summary: タスク一覧の取得
+  responses:
+    "200":
+      description: 正常に取得
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                task_title:
+                  type: string
+                status:
+                  type: integer
+          example:
+            - task_id: 1
+              task_title: "掃除"
+              status: 1
+            - task_id: 2
+              task_title: "勉強"
+              status: 2
+    "400":
+      description: エラーレスポンス
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: VALIDATION_FAILED
+              message:
+                type: string
+                example: 入力値に不備があります
+            required:
+              - code
+              - message
+post:
+  tags:
+    - Tasks
+  summary: タスクの作成
+  requestBody:
+    description: タスク内容
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            taskTitle:
+              type: string
+            taskDescription:
+              type: string
+  responses:
+    "201":
+      description: 正常に終了
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: succsess
+    "400":
+      description: バリデーションエラー
+    "500":
+      description: サーバーエラー

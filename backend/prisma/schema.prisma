@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  username       String
+  userQuestionId Int
+  userAnswer     String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  isDeleted      Boolean
+
+  tasks Task[]
+  goals Goal[]
+
+  question SecurityQuestion @relation(fields: [userQuestionId], references: [id])
+}
+
+model SecurityQuestion {
+  id      Int    @id @default(autoincrement())
+  content String
+
+  users User[]
+}
+
+model Task {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  taskStatusId    Int
+  taskTitle       String
+  taskDescription String
+  taskStartTime   DateTime
+  taskEndTime     DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  status Status @relation(fields: [taskStatusId], references: [id])
+
+  subtasks SubTask[]
+}
+
+model Status {
+  id          Int    @id @default(autoincrement())
+  status_name String
+
+  tasks Task[]
+}
+
+model SubTask {
+  id           Int      @id @default(autoincrement())
+  parentTaskId Int
+  title        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  task Task @relation(fields: [parentTaskId], references: [id], onDelete: Cascade)
+}
+
+model Goal {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  title         String
+  description   String
+  goalStartDate DateTime
+  goalEndDate   DateTime
+  createdAt     DateTime
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}

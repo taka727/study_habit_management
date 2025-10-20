@@ -1,0 +1,221 @@
+openapi: 3.0.0
+info:
+  title: Task Management API
+  description: 習慣管理アプリケーションのAPI仕様書
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: 開発環境
+  - url: https://api.example.com/v1
+    description: 本番環境
+
+paths:
+  /health:
+    get:
+      summary: サーバーのヘルスチェック
+      tags:
+        - System
+      responses:
+        '200':
+          description: サーバー稼働中
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  environment:
+                    type: string
+                    example: "development"
+  /users:
+    $ref: './paths/users.yaml'
+  /tasks:
+    $ref: './paths/tasks.yaml'
+  /tasks/{taskId}:
+    $ref: './paths/tasksId.yaml'
+  /tasks/{taskId}/subtasks:
+    $ref: './paths/subTask.yaml'
+  /subtasks/{subtaskId}:
+    $ref: './paths/subTaskId.yaml'
+  /task-statuses:
+    $ref: './paths/tasksStatuses.yaml'
+  /task-records:
+    $ref: './paths/tasksRecords.yaml'
+  /task-records?date=2025-04-12:
+    $ref: './paths/tasksRecordDate.yaml'
+  /tasks/{taskId}/records:
+    $ref: './paths/tasksIdRecords.yaml'
+  /goals:
+    $ref: './paths/goals.yaml'
+  /goals/{goalId}:
+    $ref: './paths/goalsId.yaml'
+  /goals/{goalId}/achievements:
+    $ref: './paths/goalsIdAchievements.yaml'
+  /study-targets?date=2025-04-12:
+    $ref: './paths/studyTargetsDate.yaml'
+  /study-targets:
+    $ref: './paths/studyTargets.yaml'
+  /books:
+    $ref: './paths/books.yaml'
+  /books/{bookId}:
+    $ref: './paths/booksID.yaml'
+  /me:
+    $ref: './paths/me.yaml'
+    
+components:
+  responses:
+    ValidationError:
+      description: 入力バリデーション不備
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: VALIDATION_FAILED
+              message:
+                type: string
+                example: 入力値に不備があります
+            required:
+              - code
+              - message
+          examples:
+            validation:
+              summary: バリデーション失敗
+              value:
+                code: VALIDATION_FAILED
+                message: 入力値が正しくありません
+    UnauthorizedError:
+      description: 認証されていません
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: VALIDATION_FAILED
+              message:
+                type: string
+                example: 入力値に不備があります
+            required:
+              - code
+              - message
+          examples:
+            unauthorized:
+              value:
+                code: UNAUTHORIZED
+                message: ログインが必要です
+    ForbiddenError:
+      description: 権限がありません
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: VALIDATION_FAILED
+              message:
+                type: string
+                example: 入力値に不備があります
+            required:
+              - code
+              - message
+          examples:
+            forbidden:
+              value:
+                code: FORBIDDEN
+                message: この操作を行う権限がありません
+    NotFoundError:
+      description: 対象リソースが存在しません
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: VALIDATION_FAILED
+              message:
+                type: string
+                example: 入力値に不備があります
+            required:
+              - code
+              - message
+          examples:
+            notFound:
+              value:
+                code: NOT_FOUND
+                message: 指定されたリソースは見つかりませんでした
+    ConflictError:
+      description: データの競合
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: VALIDATION_FAILED
+              message:
+                type: string
+                example: 入力値に不備があります
+            required:
+              - code
+              - message
+          examples:
+            conflict:
+              value:
+                code: CONFLICT
+                message: 同じ名前のユーザが既に存在します
+    InternalServerError:
+      description: サーバ内部エラー
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: VALIDATION_FAILED
+              message:
+                type: string
+                example: 入力値に不備があります
+            required:
+              - code
+              - message
+          examples:
+            serverError:
+              value:
+                code: INTERNAL_SERVER_ERROR
+                message: サーバで予期しないエラーが発生しました
+    
+
+tags:
+  - name: System
+    description: システム関連API
+  - name: Tasks
+    description: タスクを操作するAPI
+  - name: Users
+    description: ユーザを操作するAPI  
+  - name: SubTasks
+    description: サブタスクを操作するAPI
+  - name: TaskStatus
+    description: タスクのステータスを取得するAPI
+  - name: TaskRecords
+    description: 実績を操作するAPI
+  - name: Goals
+    description: 目標を操作するAPI  
+  - name: StudyTargets
+    description: 達成記録を操作するAPI    
+  - name: Books
+    description: 参考書情報を操作するAPI
+  - name: Me
+    description: ユーザ情報を操作するAPI
