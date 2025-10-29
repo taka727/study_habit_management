@@ -178,23 +178,6 @@ async function main() {
         ],
     });
 
-    // ユーザーセッション作成（開発用）
-    console.log('🔑 セッションを作成中...');
-    await prisma.userSession.createMany({
-        data: [
-            {
-                userId: user1.id,
-                sessionToken: 'dev-session-token-1',
-                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-            },
-            {
-                userId: user2.id,
-                sessionToken: 'dev-session-token-2',
-                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-            }
-        ]
-    });
-
     console.log('✅ Seed 完了 - 以下のデータを作成しました:');
     console.log('   👥 ユーザー: 2名');
     console.log('   🎯 ゴール: 3件');
@@ -202,7 +185,6 @@ async function main() {
     console.log('   📋 サブタスク: 8件');
     console.log('   📊 ステータス: 5種類');
     console.log('   🔐 セキュリティ質問: 5件');
-    console.log('   🔑 セッション: 2件');
 }
 
 main()
