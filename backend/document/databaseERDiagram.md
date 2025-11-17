@@ -1,134 +1,102 @@
 ```mermaid
-    erDiagram
-        %% ユーザ管理テーブル
-        ユーザ管理テーブル {
-        int user_id PK
-        string username
-        string user_question_id FK
-        string user_answer
-        datetime created_at
-        datetime updated_at
-        bool is_deleted 
-        }
+erDiagram
+    %% ユーザーテーブル
+    user {
+        int id PK "ユーザID"
+        string username "ユーザ名"
+        int userQuestionId FK "セキュリティ質問ID"
+        string userAnswer "質問への回答"
+        boolean isDeleted "削除フラグ"
+        timestamp createdAt "作成日時"
+        timestamp updatedAt "更新日時"
+    }
 
-        %% 秘密の質問テーブル
-        秘密の質問テーブル {
-        int question_id PK
-        string content
-        }
+    %% セキュリティ質問テーブル
+    security_question {
+        int id PK "質問ID"
+        string question "質問内容"
+        boolean isDeleted "削除フラグ"
+        timestamp createdAt "作成日時"
+        timestamp updatedAt "更新日時"
+    }
 
-        %% タスク管理テーブル
-        タスク管理テーブル {
-        int task_id PK
-        int user_id FK
-        int task_status_id FK
-        string task_title
-        string task_description
-        datetime task_start_time
-        datetime task_end_time
-        datetime created_at
-        datetime updated_at
-        }
+    %% ステータステーブル
+    status {
+        int id PK "ステータスID"
+        string status_name "ステータス名"
+        boolean isDeleted "削除フラグ"
+        timestamp createdAt "作成日時"
+        timestamp updatedAt "更新日時"
+    }
 
-        %% タスクステータステーブル
-        タスクステータステーブル {
-        int status_id PK
-        string status_name
-        }
+    %% ゴールテーブル
+    goal {
+        int id PK "ゴールID"
+        int userId FK "ユーザID"
+        string title "タイトル"
+        string description "説明"
+        datetime goalStartDate "開始日"
+        datetime goalEndDate "終了日"
+        boolean isDeleted "削除フラグ"
+        timestamp createdAt "作成日時"
+        timestamp updatedAt "更新日時"
+    }
 
-        %% 子タスクテーブル
-        子タスクテーブル {
-        int child_task_id PK
-        int parent_task_id FK
-        string title
-        datetime created_at
-        datetime updated_at
-        }
+    %% タスクテーブル
+    task {
+        int id PK "タスクID"
+        int userId FK "ユーザID"
+        int taskStatusId FK "ステータスID"
+        string taskTitle "タスクタイトル"
+        string taskDescription "タスク説明"
+        datetime taskStartTime "開始時間"
+        datetime taskEndTime "終了時間"
+        boolean isDeleted "削除フラグ"
+        timestamp createdAt "作成日時"
+        timestamp updatedAt "更新日時"
+    }
 
-        %% 目標管理テーブル
-        目標管理テーブル {
-        int goal_id PK
-        int user_id FK
-        string goal_title
-        string goal_description
-        datetime goal_start_date
-        datetime goal_end_date
-        datetime created_at
-        datetime updated_at
-        }
+    %% サブタスクテーブル
+    sub_task {
+        int id PK "サブタスクID"
+        int parentTaskId FK "親タスクID"
+        string title "タイトル"
+        boolean isCompleted "完了フラグ"
+        boolean isDeleted "削除フラグ"
+        timestamp createdAt "作成日時"
+        timestamp updatedAt "更新日時"
+    }
 
-        %% 達成度管理テーブル
-        達成度管理テーブル {
-        int achievement_id PK 
-        int goal_id FK
-        time achievement_study_time_sum
-        float achievement_rate
-        string achievement_comment
-        datetime record_date
-        }
+    %% タスク記録テーブル
+    task_record {
+        int id PK "記録ID"
+        int taskId FK "タスクID"
+        string description "説明"
+        datetime startTime "開始時間"
+        datetime endTime "終了時間"
+        int durationMinutes "実行時間(分)"
+        boolean isDeleted "削除フラグ"
+        timestamp createdAt "作成日時"
+        timestamp updatedAt "更新日時"
+    }
 
-        %% 一日の勉強目標時間テーブル
-        一日の勉強目標時間テーブル {
-        int record_id PK
-        int user_id FK
-        int study_minutes
-        time best_record_time
-        time minimum_record_time
-        date record_date
-        datetime created_at
-        }
+    %% タスクとゴールの関連テーブル(必要に応じて)
+    task_goal_relation {
+        int id PK "関連ID"
+        int taskId FK "タスクID"
+        int goalId FK "ゴールID"
+        timestamp createdAt "作成日時"
+    }
 
-        %% 参考書テーブル
-        参考書テーブル {
-        int book_id PK
-        int user_id FK
-        string book_title
-        string book_author
-        string book_comment
-        datetime created_at
-        datetime updated_at
-        }
-
-        %% 一日のタスク実績テーブル
-        一日のタスク実績テーブル {
-        int record_id PK
-        int user_id FK
-        int task_id FK
-        date record_date
-        time task_study_time
-        datetime created_at
-        datetime updated_at
-        }
-
-        %% テーブル間のリレーションシップ
-
-        %% ユーザ管理とタスク管理：ユーザは複数のタスクを所有
-        ユーザ管理テーブル ||--o{ タスク管理テーブル : "所有"
-
-        %% タスク管理とタスクステータス：各タスクは1つの状態を持つ
-        タスクステータステーブル ||--o{ タスク管理テーブル : "定義"
-
-        %% タスク管理と子タスク：1つのタスクは複数の子タスクに分解される
-        タスク管理テーブル ||--o{ 子タスクテーブル : "分解"
-
-        %% ユーザ管理と目標管理：ユーザは複数の目標を持つ
-        ユーザ管理テーブル ||--o{ 目標管理テーブル : "設定"
-
-        %% 目標管理と達成度管理：1つの目標に対して複数の進捗記録
-        目標管理テーブル ||--o{ 達成度管理テーブル : "記録"
-
-        %% ユーザ管理と一日の勉強目標時間：ユーザは毎日の勉強目標を持つ
-        ユーザ管理テーブル ||--o{ 一日の勉強目標時間テーブル : "記録"
-
-        %% ユーザ管理と一日のタスク実績：ユーザはタスク実績を記録
-        ユーザ管理テーブル ||--o{ 一日のタスク実績テーブル : "記録"
-
-        %% タスク管理と一日のタスク実績：タスク実績は特定のタスクに紐付く
-        タスク管理テーブル ||--o{ 一日のタスク実績テーブル : "実績"
-
-        %% ユーザ管理と秘密の質問テーブル：ユーザは複数の質問から一問定義する
-        ユーザ管理テーブル ||--o{ 秘密の質問テーブル : "定義"
-
-        %% ユーザ管理と秘密の質問テーブル：ユーザは読書中の本を管理することができる
-        ユーザ管理テーブル ||--o{ 参考書テーブル : "記録"
+    %% リレーション
+    user ||--o{ goal : "作成"
+    user ||--o{ task : "作成"
+    user }|--|| security_question : "質問選択"
+    
+    status ||--o{ task : "ステータス"
+    
+    goal ||--o{ task_goal_relation : "関連"
+    task ||--o{ task_goal_relation : "関連"
+    task ||--o{ sub_task : "親子"
+    task ||--o{ task_record : "記録"
 ```
