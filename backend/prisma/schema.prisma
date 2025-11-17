@@ -13,88 +13,117 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status{
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
 model User {
-  id             Int      @id @default(autoincrement())
-  username       String
-  userQuestionId Int
-  userAnswer     String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  isDeleted      Boolean
+  id              Int       @id @default(autoincrement())
+  name            String
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  deleateed_at    DateTime?
 
-  tasks Task[]
-  goals Goal[]
-
-  question SecurityQuestion @relation(fields: [userQuestionId], references: [id])
+  security_question_answer  security_question_answer[]
+  task                      task[]
+  history                   study_history[]
+  goal                      goal[]
+  book_management           book_management[]
 }
 
-model SecurityQuestion {
-  id      Int    @id @default(autoincrement())
-  content String
+model security_question{
+  id              Int       @id @default(autoincrement())
+  question        String    @db.VarChar(255)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  deleateed_at    DateTime?
 
-  users User[]
+  security_question_answer security_question_answer[]
 }
+model security_question_answer{
+  id              Int       @id @default(autoincrement())
+  question_id     Int       @unique
+  user_id         Int       @unique
+  answer_salt     String    @db.VarChar(255)
+  answer_hash     String    @db.VarChar(255)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  deleateed_at    DateTime?
 
-model Task {
-  id              Int      @id @default(autoincrement())
-  userId          Int
-  taskStatusId    Int
-  taskTitle       String
-  taskDescription String
-  taskStartTime   DateTime
-  taskEndTime     DateTime
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id])
-  status Status @relation(fields: [taskStatusId], references: [id])
-
-  subtasks SubTask[]
-  taskGoalRelation TaskGoalRelation[]
+  user            User                @relation(fields: [user_id], references: [id],onDelete: Cascade)
+  question        security_question   @relation(fields: [question_id], references: [id] , onDelete: Cascade)
 }
+model task{
+  id                  Int       @id @default(autoincrement())
+  user_id             Int       
+  parent_task_id      Int?
+  name                String    @db.VarChar(50)
+  description         String?    @db.VarChar(1000)
+  exec_expected_date  DateTime?
+  deadline            DateTime?
+  status              Status      @default(TODO)
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+  deleateed_at        DateTime?
 
-model Status {
-  id          Int    @id @default(autoincrement())
-  status_name String
+  user                User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  history             study_history[]
+  task_golal          task_goal[]
 
-  tasks Task[]
+  @@index             ([user_id,status,deadline])
 }
+model study_history{
+  id                Int       @id @default(autoincrement())
+  user_id           Int       @unique
+  task_id           Int?      @unique
+  description       String?    @db.VarChar(1000)
+  occurreed_on      DateTime
+  started_at        DateTime?
+  ended_at          DateTime?
+  duration_seconds  Int?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  deleateed_at      DateTime?
 
-model SubTask {
-  id           Int      @id @default(autoincrement())
-  parentTaskId Int
-  title        String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  task Task @relation(fields: [parentTaskId], references: [id], onDelete: Cascade)
+  user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  task              task?      @relation(fields: [task_id], references: [id], onDelete: SetNull)
+  @@index           ([user_id,occurreed_on])
 }
+model goal{
+  id              Int       @id @default(autoincrement())
+  user_id         Int       @unique
+  goal_deadline   DateTime  
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  deleateed_at    DateTime?
 
-model Goal {
-  id            Int      @id @default(autoincrement())
-  userId        Int
-  title         String
-  description   String
-  goalStartDate DateTime
-  goalEndDate   DateTime
-  createdAt     DateTime
-  updatedAt     DateTime @updatedAt
+  user            User      @relation(fields: [user_id], references:[id], onDelete: Cascade)
+  task_goal       task_goal[]
 
-  user User @relation(fields: [userId], references: [id])
-
-  taskRelation TaskGoalRelation[]
+  @@index         ([user_id,goal_deadline])
 }
+model task_goal{
+  id              Int       @id @default(autoincrement())
+  goal_id         Int
+  task_id         Int
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  deleateed_at    DateTime?
 
-model TaskGoalRelation {
-  id     Int  @id @default(autoincrement())
-  taskId Int
-  goalId Int
-  
-  // リレーション
-  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  goal Goal @relation(fields: [goalId], references: [id], onDelete: Cascade)
-  
-  // 複合ユニーク制約（同じタスクとゴールの組み合わせは1つまで）
-  @@unique([taskId, goalId])
-  @@map("task_goal_relations")
+  goal            goal      @relation(fields: [goal_id], references: [id], onDelete: Cascade)
+  task            task      @relation(fields: [task_id], references: [id], onDelete: Cascade)
+}
+model book_management{
+  id              Int       @id @default(autoincrement())
+  user_id         Int       @unique
+  title           String    @db.VarChar(255)
+  desicription    String?    @db.VarChar(1000)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  deleateed_at    DateTime?
+
+  user            User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
