@@ -84,7 +84,7 @@ app.listen(port, () => {
 app.get('/users', async (req, res) => {
     console.log('👥 Get users endpoint called');
     try {
-        const users = await prisma.user.findMany();
+        const users = await prisma.users.findMany();
         console.log(`✅ Found ${users.length} users`);
         res.json({ status: 'success', data: users });
     } catch (error) {
