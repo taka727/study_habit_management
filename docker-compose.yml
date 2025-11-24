@@ -23,6 +23,8 @@ services:
       --log-bin-trust-function-creators=1
       --character-set-server=${MYSQL_CHARSET}
       --collation-server=${MYSQL_COLLATION}
+      --character-set-client-handshake=FALSE
+      --init-connect='SET NAMES utf8mb4'
       --sql_mode=STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO
     networks:
       - app_network
@@ -57,7 +59,7 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - ${BACKEND_VOLUME_1:-/dev/null}:/app
+      - ${BACKEND_VOLUME_1}:/app
       - /app/node_modules
     networks:
       - app_network
