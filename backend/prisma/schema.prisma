@@ -23,6 +23,7 @@ enum Status {
 model users {
   id           Int       @id @default(autoincrement())
   name         String
+  login_name   String    @unique @db.VarChar(255)
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
   deleateed_at DateTime?
