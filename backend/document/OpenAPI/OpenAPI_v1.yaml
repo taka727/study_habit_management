@@ -1,0 +1,1025 @@
+openapi: 3.1.0
+
+info:
+  title: Study Habit Management API
+  version: 1.0.0
+  description: >
+    個人開発アプリ用の v1 API 仕様書。
+    tasks / study-histories / goals / books / users / auth を提供する。
+
+servers:
+  - url: https://api.example.com/api/v1
+    description: Production
+  - url: http://localhost:3000/api/v1
+    description: Local
+
+tags:
+  - name: Tasks
+  - name: StudyHistories
+  - name: Goals
+  - name: Books
+  - name: Users
+  - name: Auth
+
+paths:
+  #######################################################
+  # TASKS
+  #######################################################
+  /tasks:
+    get:
+      tags: [Tasks]
+      summary: タスク一覧取得
+      parameters:
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: タスク一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    post:
+      tags: [Tasks]
+      summary: タスク作成
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskCreateInput"
+      responses:
+        "201":
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /tasks/{id}:
+    get:
+      tags: [Tasks]
+      summary: タスク取得
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: タスク詳細
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Tasks]
+      summary: タスク更新
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskUpdateInput"
+      responses:
+        "200":
+          description: 更新後のタスク
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    delete:
+      tags: [Tasks]
+      summary: タスク削除
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  #######################################################
+  # GOALS
+  #######################################################
+
+  /goals:
+    get:
+      tags: [Goals]
+      summary: 目標一覧取得
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 目標一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Goal"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [Goals]
+      summary: 目標作成
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalCreateInput"
+      responses:
+        "201":
+          description: 目標作成成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /goals/{id}:
+    get:
+      tags: [Goals]
+      summary: 個別目標取得API
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 個別目標情報取得成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [Goals]
+      summary: 目標更新API
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalUpdateInput"
+      responses:
+        "200":
+          description: 個別目標情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Goals]
+      summary: 目標削除API
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  #######################################################
+  # BOOKS
+  #######################################################
+
+  /books:
+    get:
+      tags: [Books]
+      summary: 参考書一覧取得
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 参考書一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [Books]
+      summary: 参考書作成
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookInput"
+      responses:
+        "201":
+          description: 参考書作成成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /books/{id}:
+    get:
+      tags: [Books]
+      summary: 個別参考書取得
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 個別参考書取得成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Books]
+      summary: 参考書更新
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookInput"
+      responses:
+        "200":
+          description: 参考書更新成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [Books]
+      summary: 参考書削除
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  #######################################################
+  # STUDY HISTORIES
+  #######################################################
+  /study-histories:
+    get:
+      tags: [StudyHistories]
+      summary: 勉強履歴一覧の取得
+      description: 指定されたfrom/toが不正な日時形式の場合、400エラーを返す。
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: 勉強履歴取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudyHistoryResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    post:
+      tags: [StudyHistories]
+      summary: 勉強履歴の作成
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudyHistoryInput"
+      responses:
+        "201":
+          description: 勉強履歴作成成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyHistoryResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /study-histories/{id}:
+    get:
+      tags: [StudyHistories]
+      summary: 個別の勉強履歴取得
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 個別の勉強履歴取得成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyHistoryResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [StudyHistories]
+      summary: 勉強履歴の更新
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudyHistoryUpdateInput"
+      responses:
+        "200":
+          description: 勉強履歴更新成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyHistoryResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [StudyHistories]
+      summary: 勉強履歴の削除
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /study-histories/start:
+    post:
+      tags: [StudyHistories]
+      summary: 勉強履歴開始
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudyHistoryStartInput"
+      responses:
+        "201":
+          description: 勉強履歴開始成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyHistoryResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /study-histories/{id}/end:
+    put:
+      tags: [StudyHistories]
+      summary: 勉強履歴終了
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudyHistoryEndInput"
+      responses:
+        "200":
+          description: 勉強履歴終了成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyHistoryResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  #######################################################
+  # USERS
+  #######################################################
+  /users/me:
+    get:
+      tags: [Users]
+      summary: 自分のユーザー情報取得
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: ユーザ情報取得成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    put:
+      tags: [Users]
+      summary: 自分のユーザー情報更新
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: ユーザ情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    delete:
+      tags: [Users]
+      summary: 自分のユーザー情報削除
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  #######################################################
+  # AUTH
+  #######################################################
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: ユーザー登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: 登録成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: ログイン
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          $ref: "#/components/responses/AuthenticationFailed"
+
+  /auth/security-question:
+    get:
+      tags: [Auth]
+      summary: セキュリティ質問取得
+      parameters:
+        - name: login_name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 質問
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityQuestion"
+        "404":
+          $ref: "#/components/responses/NotFound"
+          
+  /auth/logout:
+    post:
+      tags: [Auth]
+      security:
+        - bearerAuth: []
+      summary: ログアウト
+      responses:
+        "200":
+          description: ログアウト完了
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogoutResponse"
+
+#######################################################
+# COMPONENTS
+#######################################################
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  #######################################################
+  # SHARED SCHEMAS（ここに各モデルを追加）
+  #######################################################
+
+  schemas:
+    Task:
+      type: object
+      properties:
+        id: { type: integer }
+        task_name: { type: string }
+        description: { type: string }
+        status: { type: string }
+        exec_expected_date: { type: string, format: date-time }
+        deadline: { type: string, format: date-time }
+        parent_task_ids:
+          type: array
+          items: { type: integer }
+
+    TaskCreateInput:
+      type: object
+      required: [task_name]
+      properties:
+        task_name: { type: string }
+        description: { type: string }
+        status: { type: string }
+        exec_expected_date: { type: string, format: date-time }
+        deadline: { type: string, format: date-time }
+        parent_task_ids:
+          type: array
+          items: { type: integer }
+
+    TaskUpdateInput:
+      allOf:
+        - $ref: "#/components/schemas/TaskCreateInput"
+
+    Goal:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        goal_deadline: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        deleted_at:
+          type:
+            - string
+            - "null"
+          format: date-time
+
+    GoalCreateInput:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        goal_deadline: { type: string, format: date-time }
+
+    GoalUpdateInput:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        goal_deadline: { type: string, format: date-time }
+
+    StudyHistoryInput:
+      type: object
+      required: [occurred_on]
+      properties:
+        task_id:
+          type:
+            - integer
+            - "null"
+        description:
+          type:
+            - string
+            - "null"
+        occurred_on:
+          type:
+            - string
+          format: date
+
+    StudyHistoryStartInput:
+      type: object
+      description: "勉強開始時にタスクに紐づけたい場合のみ、task_idを指定する。フリー勉強の場合はnullまたは未指定。"
+      properties:
+        task_id:
+          type:
+            - integer
+            - "null"
+
+    StudyHistoryEndInput:
+      type: object
+      description: "end API のbodyは不要。サーバー側で現在時刻を記録する。"
+      properties: {}
+
+    StudyHistoryUpdateInput:
+      type: object
+      description: "勉強履歴の部分更新。含まれた項目のみ更新する。"
+      properties:
+        task_id:
+          type:
+            - integer
+            - "null"
+        description:
+          type:
+            - string
+            - "null"
+        occurred_on:
+          type:
+            - string
+            - "null"
+          format: date
+        start_at:
+          type:
+            - string
+            - "null"
+          format: date-time
+        end_at:
+          type:
+            - string
+            - "null"
+          format: date-time
+
+    StudyHistoryResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        task_id:
+          type:
+            - integer
+            - "null"
+        description:
+          type:
+            - string
+            - "null"
+        occurred_on:
+          type:
+            - string
+            - "null"
+          format: date
+        start_at:
+          type:
+            - string
+            - "null"
+          format: date-time
+        end_at:
+          type:
+            - string
+            - "null"
+          format: date-time
+        duration_seconds:
+          type:
+            - integer
+            - "null"
+
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type:
+            - string
+            - "null"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type:
+            - string
+            - "null"
+          format: date-time
+
+    BookInput:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type:
+            - string
+            - "null"
+          maxLength: 1000
+
+    RegisterInput:
+      type: object
+      required: [name, login_name, question, answer]
+      properties:
+        name: { type: string }
+        login_name: { type: string }
+        question: { type: string }
+        answer: { type: string }
+
+    RegisterResponse:
+      type: object
+      properties:
+        message: { type: string }
+        user:
+          $ref: "#/components/schemas/User"
+
+    LoginInput:
+      type: object
+      required: [login_name, answer]
+      properties:
+        login_name: { type: string }
+        answer: { type: string }
+
+    LoginResponse:
+      type: object
+      required: [message, token, user]
+      properties:
+        message: { type: string }
+        token: { type: string }
+        user:
+          $ref: "#/components/schemas/User"
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+          maxLength: 255
+        login_name:
+          type: string
+          maxLength: 255
+
+    SecurityQuestion:
+      type: object
+      properties:
+        question: { type: string }
+
+    LogoutResponse:
+      type: object
+      properties:
+        message: { type: string }
+        
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details:
+              type: object
+              properties:
+                field_errors:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+
+  #######################################################
+  # ERROR RESPONSES
+  #######################################################
+  responses:
+    ValidationError:
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Unauthorized:
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    AuthenticationFailed:
+      description: 認証失敗
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    NotFound:
+      description: リソースが見つかりません
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Conflict:
+      description: データ衝突
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
