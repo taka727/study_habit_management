@@ -33,12 +33,7 @@ const getTaskById = async (req, res) => {
         
         console.log(`🔎 getTaskById: Searching for task with valid ID: ${id}`);
         const task = await prisma.task.findUniqueOrThrow({
-            where: { id: id },
-            include: {
-                user: true,
-                status: true,
-                subtasks: true,
-            },
+            where: { id: id }
         });
         
         console.log(`✅ getTaskById: Successfully found task:`, JSON.stringify(task, null, 2));
