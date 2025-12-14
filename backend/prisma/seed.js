@@ -68,7 +68,6 @@ async function main() {
     console.log('tasks create');
         const task1 = await prisma.tasks?.create({
         data:{
-                user_id:user1.id,
                 parent_task_id: null,
                 name:'タスク名',
                 description:'タスクの説明',
@@ -80,7 +79,6 @@ async function main() {
         const task2 = await prisma.tasks?.create({
         data:
             {
-                user_id:user1.id,
                 parent_task_id: null,
                 name:'タスク名2',
                 description:'タスクの説明2',
@@ -92,7 +90,6 @@ async function main() {
         const task3 = await prisma.tasks?.create({
         data:
             {
-                user_id:user1.id,
                 parent_task_id: null,
                 name:'タスク名3',
                 description:'タスクの説明3',
@@ -104,7 +101,6 @@ async function main() {
         const task4 = await prisma.tasks?.create({
         data:
             {
-                user_id:user1.id,
                 parent_task_id: null,
                 name:'タスク名4',
                 description:'タスクの説明4',
@@ -116,7 +112,6 @@ async function main() {
         const task5 = await prisma.tasks?.create({
         data:
             {
-                user_id:user2.id,
                 parent_task_id: null,
                 name:'タスク名',
                 description:'タスクの説明',
@@ -128,7 +123,6 @@ async function main() {
         const task6 = await prisma.tasks?.create({
         data:
             {
-                user_id:user2.id,
                 parent_task_id: null,
                 name:'タスク名',
                 description:'タスクの説明',
@@ -140,7 +134,6 @@ async function main() {
         const task7 = await prisma.tasks?.create({
         data:
             {
-                user_id:user2.id,
                 parent_task_id: null,
                 name:'タスク名3',
                 description:'タスクの説明3',
@@ -152,7 +145,6 @@ async function main() {
         const task8 = await prisma.tasks?.create({
         data:
             {
-                user_id:user2.id,
                 parent_task_id: null,
                 name:'タスク名4',
                 description:'タスクの説明4',
@@ -165,7 +157,6 @@ async function main() {
     const goal1 = await prisma.goals?.create({
         data:
             {
-                user_id:user1.id,
                 name:"目標の名前1",
                 description:"目標の説明1",
                 goal_deadline: new Date("2025-12-12"),
@@ -174,7 +165,6 @@ async function main() {
     const goal2 = await prisma.goals?.create({
         data:
             {
-                user_id:user1.id,
                 name:"目標の名前2",
                 description:"目標の説明2",
                 goal_deadline: new Date("2025-12-12"),
@@ -183,7 +173,6 @@ async function main() {
     const goal3 = await prisma.goals?.create({
         data:
             {
-                user_id:user2.id,
                 name:"目標の名前1",
                 description:"目標の説明2",
                 goal_deadline: new Date("2025-12-12"),
@@ -193,7 +182,6 @@ async function main() {
     const goal4 = await prisma.goals?.create({
         data:
             {
-                user_id:user2.id,
                 name:"目標の名前2",
                 description:"目標の説明2",
                 goal_deadline: new Date("2025-12-12"),
@@ -204,22 +192,18 @@ async function main() {
     const book_managements = await prisma.book_managements?.createMany({
         data:[
             {
-                user_id:user1.id,
                 title:"参考書１",
                 desicription:"参考書の内容１",
             },
             {
-                user_id:user1.id,
                 title:"参考書２",
                 desicription:"参考書の説明２",
             },
             {
-                user_id:user2.id,
                 title:"参考書３",
                 desicription:"参考書の内容３",
             },
             {
-                user_id:user2.id,
                 title:"参考書４",
                 desicription:"参考書の説明４",
             },
@@ -232,7 +216,6 @@ async function main() {
     const study_histories = await prisma.study_histories?.createMany({
         data:[
             {
-                user_id:user1.id,
                 task_id:task1.id,
                 description:"今日の勉強の結果",
                 occurreed_on: new Date(),
@@ -241,7 +224,6 @@ async function main() {
                 duration_seconds:Math.floor((end_at-start_at)/1000),
             },
             {
-                user_id:user1.id,
                 task_id:task2.id,
                 description:"今日の作業の結果",
                 occurreed_on: new Date(),
@@ -250,7 +232,6 @@ async function main() {
                 duration_seconds:Math.floor((end_at-start_at)/1000),
             },
             {
-                user_id:user2.id,
                 task_id:task5.id,
                 description:"今日の勉強の結果",
                 occurreed_on: new Date(),
@@ -259,7 +240,6 @@ async function main() {
                 duration_seconds:Math.floor((end_at-start_at)/1000),
             },
             {
-                user_id:user2.id,
                 task_id:task6.id,
                 description:"今日の作業の結果",
                 occurreed_on: new Date(),
