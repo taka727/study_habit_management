@@ -29,10 +29,16 @@ async function main() {
     console.log('user create')
 
     const user1 = await prisma.users?.create({
-        data:{name: 'テスト　太郎'},
+        data:{
+            name: 'テスト　太郎',
+            login_name : 'test_tarou'
+        },
     });
     const user2 = await prisma.users?.create({
-        data: {name: 'テスト　次郎'},
+        data: {
+            name: 'テスト　次郎',
+            login_name:'test_zirou'
+        },
     });
            
 
