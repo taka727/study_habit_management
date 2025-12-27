@@ -39,6 +39,7 @@ const getBookById = async (req, res) => {
       .json({ status: "error", message: "サーバーエラー:" + error.message });
   }
 };
+
 const createBook = async (req, res) => {
   const { title, desicription } = req.body;
   try {
@@ -58,11 +59,14 @@ const createBook = async (req, res) => {
       .json({ status: "error", message: "サーバーエラー:" + error.message });
   }
 };
+
 const updateBook = async (req, res) => {
   const { id } = req.params;
   const { title, desicription } = req.body;
   try {
-    const book = await prisma.book_managements.updata({
+    console.log("title：" + title);
+    console.log("desicription：" + desicription);
+    const book = await prisma.book_managements.update({
       where: { id: parseInt(id) },
       data: {
         title: title,
@@ -70,13 +74,37 @@ const updateBook = async (req, res) => {
         updated_at: new Date(),
       },
     });
+    console.log(book);
+    res.status(201).json({status:"success",book});
   } catch (error) {
     res
       .status(500)
       .json({ status: "error", message: "サーバーエラー:" + error.message });
   }
 };
-const deleteBook = async (req, res) => {};
+
+const deleteBook = async (req, res) => {
+  const { id } = req.params;
+  try{
+    console.log("id:"+ id);
+    const book = await prisma.book_managements.update({
+      where:{id : parseInt(id)},
+      data:{
+        updated_at:new Date(),
+        deleateed_at:new Date(),
+      }
+    });
+    console.log(book);
+    res.status(201).json({status:"success",book});
+  }catch(error){
+    res
+      .status(500)
+      .json({
+      status: "error",
+      message:"サーバーエラー："+ error.message
+      });
+  }
+};
 
 module.exports = {
   getAllBooks,
