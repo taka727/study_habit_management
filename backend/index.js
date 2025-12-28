@@ -5,6 +5,7 @@ const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const taskRoutes = require("./routers/tasksRouter");
+const bookRoutes = require("./routers/booksRouter");
 
 const app = express();
 const port = process.env.BACKEND_PORT || process.env.PORT || 3000;
@@ -66,6 +67,7 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/tasks',taskRoutes);
+app.use('/books',bookRoutes);
 
 app.get('/', (req, res) => {
     console.log('✅ Root endpoint accessed');
@@ -74,11 +76,6 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
     console.log(`🚀 Server is running on http://localhost:${port}`);
-    console.log(`📝 API endpoints available:`);
-    console.log(`   GET  http://localhost:${port}/`);
-    console.log(`   GET  http://localhost:${port}/tasks`);
-    console.log(`   GET  http://localhost:${port}/tasks/:id`);
-    console.log(`   GET  http://localhost:${port}/users`);
 });
 
 app.get('/users', async (req, res) => {

@@ -27,12 +27,6 @@ model users {
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
   deleateed_at DateTime?
-
-  security_question_answers security_question_answers[]
-  tasks                     tasks[]
-  history                   study_histories[]
-  goals                     goals[]
-  book_managements          book_managements[]
 }
 
 model security_questions {
@@ -55,13 +49,11 @@ model security_question_answers {
   updated_at   DateTime  @updatedAt
   deleateed_at DateTime?
 
-  users     users              @relation(fields: [user_id], references: [id], onDelete: Cascade)
   questions security_questions @relation(fields: [question_id], references: [id], onDelete: Cascade)
 }
 
 model tasks {
   id                 Int       @id @default(autoincrement())
-  user_id            Int
   parent_task_id     Int?
   name               String    @db.VarChar(50)
   description        String?   @db.VarChar(1000)
@@ -72,16 +64,14 @@ model tasks {
   updated_at         DateTime  @updatedAt
   deleateed_at       DateTime?
 
-  users      users             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   history    study_histories[]
   task_goals task_goals[]
 
-  @@index([user_id, status, deadline])
+  @@index([status, deadline])
 }
 
 model study_histories {
   id               Int       @id @default(autoincrement())
-  user_id          Int       
   task_id          Int?      
   description      String?   @db.VarChar(1000)
   occurreed_on     DateTime
@@ -92,15 +82,13 @@ model study_histories {
   updated_at       DateTime  @updatedAt
   deleateed_at     DateTime?
 
-  user users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
   task tasks? @relation(fields: [task_id], references: [id], onDelete: SetNull)
 
-  @@index([user_id, occurreed_on])
+  @@index([occurreed_on])
 }
 
 model goals {
   id            Int       @id @default(autoincrement())
-  user_id       Int       
   name          String    @db.VarChar(100)
   description   String?   @db.VarChar(1000)
   goal_deadline DateTime
@@ -108,10 +96,9 @@ model goals {
   updated_at    DateTime  @updatedAt
   deleateed_at  DateTime?
 
-  user       users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
   task_goals task_goals[]
 
-  @@index([user_id, goal_deadline])
+  @@index([goal_deadline])
 }
 
 model task_goals {
@@ -128,12 +115,9 @@ model task_goals {
 
 model book_managements {
   id           Int       @id @default(autoincrement())
-  user_id      Int       
   title        String    @db.VarChar(255)
   desicription String?   @db.VarChar(1000)
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
   deleateed_at DateTime?
-
-  users users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
