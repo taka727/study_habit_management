@@ -121,8 +121,8 @@ const deleteBook = async (req, res) => {
       },
     });
     console.log(book);
-    res.status(204).json({ status: "success", book });
-  } catch (error) {
+    res.status(204).json({status:"success",book});
+  }catch(error){
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "p2025"
