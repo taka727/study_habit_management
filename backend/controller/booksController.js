@@ -77,6 +77,12 @@ const updateBook = async (req, res) => {
     console.log(book);
     res.status(201).json({status:"success",book});
   } catch (error) {
+    // Handle Prisma error when record is not found
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      return res
+        .status(404)
+        .json({ status: "error", message: "書籍が見つかりません" });
+    }
     res
       .status(500)
       .json({ status: "error", message: "サーバーエラー:" + error.message });
@@ -97,6 +103,12 @@ const deleteBook = async (req, res) => {
     console.log(book);
     res.status(201).json({status:"success",book});
   }catch(error){
+    // Handle Prisma error when record is not found
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      return res
+        .status(404)
+        .json({ status: "error", message: "書籍が見つかりません" });
+    }
     res
       .status(500)
       .json({
