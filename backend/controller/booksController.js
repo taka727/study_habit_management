@@ -51,10 +51,16 @@ const getBookById = async (req, res) => {
 };
 
 const createBook = async (req, res) => {
-  const { title, desicription } = req.body;
+  const { title , desicription} = req.body;
   try {
+    if(title === undefined || title === null){
+      return res.status(400).json({
+        message:'タイトルが不足しています'
+      })
+    }
     console.log("title：" + title);
     console.log("desicription：" + desicription);
+    
     const book = await prisma.book_managements.create({
       data: {
         title: title,
@@ -81,7 +87,6 @@ const updateBook = async (req, res) => {
       data: {
         title: title,
         desicription: desicription,
-        updated_at: new Date(),
       },
     });
     console.log(book);
@@ -112,7 +117,6 @@ const deleteBook = async (req, res) => {
     const book = await prisma.book_managements.update({
       where: { id: parseInt(id) },
       data: {
-        updated_at: new Date(),
         deleateed_at: new Date(),
       },
     });
