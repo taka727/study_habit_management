@@ -3,15 +3,21 @@ const { Prisma } = require("@prisma/client");
 
 const getAllHistories = async (req, res) => {
   console.log("start getALLHistories");
-  const {from ,to} = req.params;
+  const {from ,to} = req.query;
+  const fromDate = from ? new Date(from) : undefined;
+  const toDate = to ? new Date(new Date(to).setHours(23, 59, 59, 999)) : undefined;
+
   try {
+    console.log(fromDate);
+    console.log(toDate);
+
     const histories = await prisma.study_histories.findMany({
         where:{
             created_at:{
-                gte:from,
-                lte:to,
+                gte:fromDate,
+                lte:toDate,
             },
-            deleteed_at:null
+            deleateed_at:null
         }
     });
     console.log(histories);
