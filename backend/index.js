@@ -7,6 +7,7 @@ const YAML = require('yamljs');
 const taskRoutes = require("./routers/tasksRouter");
 const bookRoutes = require("./routers/booksRouter");
 const goalsRoutes = require("./routers/goalsRouter");
+const historyiesRoutes = require("./routers/studyHistoriesRouter");
 
 const app = express();
 const port = process.env.BACKEND_PORT || process.env.PORT || 3000;
@@ -44,7 +45,7 @@ db.connect(err => {
         console.log('Connected to MySQL');
     }
 });
-const swaggerDocument = YAML.load(path.join(__dirname, './document/OpenAPI/dist/openapi-full.yaml'));
+const swaggerDocument = YAML.load(path.join(__dirname, './document/OpenAPI/OpenAPI_v1.yaml'));
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   customCss: '.swagger-ui .topbar { display: none }',
@@ -70,6 +71,8 @@ app.get('/health', (req, res) => {
 app.use('/tasks',taskRoutes);
 app.use('/books',bookRoutes);
 app.use('/goals',goalsRoutes);
+app.use('/history',historyiesRoutes);
+
 
 app.get('/', (req, res) => {
     console.log('✅ Root endpoint accessed');
