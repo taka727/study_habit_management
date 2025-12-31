@@ -58,3 +58,11 @@ jspm_packages/
 # Prisma
 *.db
 *.db-journal
+
+# MySQL data directory
+mysql-data/
+mysql-init/
+
+# Docker volumes
+**/mysql-data/
+**/mysql-init/

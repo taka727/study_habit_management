@@ -45,7 +45,7 @@ db.connect(err => {
         console.log('Connected to MySQL');
     }
 });
-const swaggerDocument = YAML.load(path.join(__dirname, './document/OpenAPI/dist/openapi-full.yaml'));
+const swaggerDocument = YAML.load(path.join(__dirname, './document/OpenAPI/OpenAPI_v1.yaml'));
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   customCss: '.swagger-ui .topbar { display: none }',
