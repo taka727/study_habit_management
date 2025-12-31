@@ -8,6 +8,8 @@ const taskRoutes = require("./routers/tasksRouter");
 const bookRoutes = require("./routers/booksRouter");
 const goalsRoutes = require("./routers/goalsRouter");
 const historyiesRoutes = require("./routers/studyHistoriesRouter");
+const userRoutes = require("./routers/userRouter");
+const authRoutes = require("./routers/authRouter");
 
 const app = express();
 const port = process.env.BACKEND_PORT || process.env.PORT || 3000;
@@ -72,6 +74,8 @@ app.use('/tasks',taskRoutes);
 app.use('/books',bookRoutes);
 app.use('/goals',goalsRoutes);
 app.use('/history',historyiesRoutes);
+app.use('/user',userRoutes);
+app.use('/auth',authRoutes);
 
 
 app.get('/', (req, res) => {
