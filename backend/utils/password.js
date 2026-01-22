@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const logger = require('./utils/logger');
 
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 12;
 
@@ -19,7 +20,7 @@ const hashPassword = async (password) => {
         const hash = await bcrypt.hash(password, salt);
         return hash;
     }catch (error) {
-        console.error('Error hashing password:', error);
+        logger.error('Error hashing password:', error);
         throw error;
     }
     
@@ -40,7 +41,7 @@ const verifyPassword = async (password,hash) => {
         const result = await bcrypt.compare(password,hash);
         return result;
     }catch(error){
-        console.log('パスワード認証エラー:',error.message);
+        logger.info('パスワード認証エラー:',error.message);
         throw error;
     }
 }

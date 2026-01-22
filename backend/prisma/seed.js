@@ -1,32 +1,33 @@
 const { PrismaClient } = require('@prisma/client');
 const dcrypt = require('bcryptjs');
+const logger = require('./utils/logger');
 
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('Seed start...');
+    logger.info('Seed start...');
     
     // Prismaクライアントの接続確認
     await prisma.$connect();
-    console.log('Database connect success...');
+    logger.info('Database connect success...');
 
     // データベースクリア（開発環境のみ）
-    console.log('Clear existing data...');
+    logger.info('Clear existing data...');
     // リレーション系のテーブルから削除
-    await prisma.task_goals?.deleteMany({}).catch(()=> console.log('task_goals テーブルが存在しません'));
-    await prisma.study_histories?.deleteMany({}).catch(()=>console.log('study_histories テーブルが存在しません'));
-    await prisma.book_managements?.deleteMany({}).catch(()=> console.log('book_management テーブルが存在しません'));
-    await prisma.goals?.deleteMany({}).catch(()=> console.log('goals テーブルが存在しません'));
-    await prisma.tasks?.deleteMany({}).catch(()=> console.log('tasks テーブルが存在しません'));
-    await prisma.security_question_answers?.deleteMany({}).catch(()=> console.log('security_question_answers テーブルが存在しません'));
-    await prisma.security_questions?.deleteMany({}).catch(()=> console.log('security_questions テーブルが存在しません'));
-    await prisma.users?.deleteMany({}).catch(()=> console.log('users テーブルが存在しません'));
+    await prisma.task_goals?.deleteMany({}).catch(()=> logger.info('task_goals テーブルが存在しません'));
+    await prisma.study_histories?.deleteMany({}).catch(()=>logger.info('study_histories テーブルが存在しません'));
+    await prisma.book_managements?.deleteMany({}).catch(()=> logger.info('book_management テーブルが存在しません'));
+    await prisma.goals?.deleteMany({}).catch(()=> logger.info('goals テーブルが存在しません'));
+    await prisma.tasks?.deleteMany({}).catch(()=> logger.info('tasks テーブルが存在しません'));
+    await prisma.security_question_answers?.deleteMany({}).catch(()=> logger.info('security_question_answers テーブルが存在しません'));
+    await prisma.security_questions?.deleteMany({}).catch(()=> logger.info('security_questions テーブルが存在しません'));
+    await prisma.users?.deleteMany({}).catch(()=> logger.info('users テーブルが存在しません'));
 
 
 
 
     // セキュリティ質問作成（個別作成で確実にIDを取得）
-    console.log('user create')
+    logger.info('user create')
 
     const user1 = await prisma.users?.create({
         data:{
@@ -42,7 +43,7 @@ async function main() {
     });
            
 
-    console.log('question create');
+    logger.info('question create');
     const question1 = await prisma.security_questions?.create({
             data:{question:'好きな食べ物は？'},
     });
@@ -50,7 +51,7 @@ async function main() {
             data:{question:'昔買っていたペットの名前は？'},
     });
 
-    console.log('questions_answer create');
+    logger.info('questions_answer create');
     const password = 'password132'
     const salt = await  dcrypt.genSalt(10);
     const passwordHash = await dcrypt.hash(password,salt);
@@ -71,7 +72,7 @@ async function main() {
         ]
     });
 
-    console.log('tasks create');
+    logger.info('tasks create');
         const task1 = await prisma.tasks?.create({
         data:{
                 parent_task_id: null,
@@ -159,7 +160,7 @@ async function main() {
                 status : 'CANCELLED'
             },
     });
-    console.log('goals create');
+    logger.info('goals create');
     const goal1 = await prisma.goals?.create({
         data:
             {
@@ -194,7 +195,7 @@ async function main() {
             },
     });
 
-    console.log('book_managements create');
+    logger.info('book_managements create');
     const book_managements = await prisma.book_managements?.createMany({
         data:[
             {
@@ -216,7 +217,7 @@ async function main() {
         ]
     });
 
-    console.log('study_histories create');
+    logger.info('study_histories create');
     const start_at = new Date("2025-12-12T10:00:00");
     const end_at = new Date("2025-12-12T12:30:45")
     const study_histories = await prisma.study_histories?.createMany({
@@ -256,7 +257,7 @@ async function main() {
         ]
     });
 
-    console.log('task_goals create');
+    logger.info('task_goals create');
     const task_goals = await prisma.task_goals?.createMany({
         data:[
             {
@@ -279,21 +280,21 @@ async function main() {
     });
      
     
-    console.log('Seed complete');
-    console.log('ユーザー: 2名');
-    console.log('ログイン用質問作成: 2件');
-    console.log('ログイン用質問回答: 2件');
-    console.log('タスク作成: ８件');
-    console.log('目標作成: ４件');
-    console.log('参考書作成: ４件');
-    console.log('勉強履歴の作成: ４件');
-    console.log('目標とタスクの関係を作成: ４件');
+    logger.info('Seed complete');
+    logger.info('ユーザー: 2名');
+    logger.info('ログイン用質問作成: 2件');
+    logger.info('ログイン用質問回答: 2件');
+    logger.info('タスク作成: ８件');
+    logger.info('目標作成: ４件');
+    logger.info('参考書作成: ４件');
+    logger.info('勉強履歴の作成: ４件');
+    logger.info('目標とタスクの関係を作成: ４件');
 
 }
 
 main()
     .catch((e) => {
-        console.error('❌ Seed実行エラー:', e);
+        logger.error('❌ Seed実行エラー:', e);
         process.exit(1);
     })
     .finally(async () => {

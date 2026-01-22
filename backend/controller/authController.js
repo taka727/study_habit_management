@@ -1,42 +1,43 @@
 const prisma = require("../prismaClient");
+const logger = require('./utils/logger');
 
 const registerUser = async (req, res) => {
-  console.log("start registerUser");
+  logger.info("start registerUser");
   try {
   } catch (error){
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    console.log("end registerUser");
+    logger.info("end registerUser");
   }
 };
 
 const loginUser = async (req, res) => {
-  console.log("start loginUser");
+  logger.info("start loginUser");
   try {
   } catch (error){
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    console.log("end loginUser");
+    logger.info("end loginUser");
   }
 };
 
 const getSecurityQuestion = async (req, res) => {
-  console.log("start getSecurityQuestion");
+  logger.info("start getSecurityQuestion");
   try {
   } catch (error){
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    console.log("end getSecurityQuestion");
+    logger.info("end getSecurityQuestion");
   }
 };
 
 const logoutUser = async (req, res) => {
-  console.log("start logoutUser");
+  logger.info("start logoutUser");
   try {
   } catch (error){
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    console.log("end logoutUser");
+    logger.info("end logoutUser");
   }
 };
 
