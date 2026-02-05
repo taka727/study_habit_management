@@ -27,7 +27,7 @@ async function main() {
 
 
     // セキュリティ質問作成（個別作成で確実にIDを取得）
-    logger.info('user create')
+    logger.info('user create');
 
     const user1 = await prisma.users?.create({
         data:{
