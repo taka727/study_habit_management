@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const logger = require("../utils/logger");
 
 // 環境変数の設定（文字列として取得）
 const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-key';
