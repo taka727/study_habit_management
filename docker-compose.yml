@@ -1,6 +1,7 @@
 services:
   # MySQL データベース
   mysql:
+    profiles: ["dev","backend-only","full"]
     image: mysql:8.0
     container_name: ${APP_NAME}_mysql
     restart: unless-stopped
@@ -37,6 +38,7 @@ services:
 
   # Backend API サーバー
   backend:
+    profiles: ["dev","backend-only","full"]
     build: 
       context: ./backend
       dockerfile: Dockerfile
@@ -67,6 +69,7 @@ services:
 
   # Frontend Vue.js アプリ
   frontend:
+    profiles: ["full"]
     build:
       context: ./frontend
       dockerfile: Dockerfile
