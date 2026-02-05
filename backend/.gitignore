@@ -2,7 +2,7 @@
 .env
 .env.docker
 .env.example
-/backend/.env.local
+.env.local
 # Ignore node_modules
 node_modules/
 **/node_modules/
