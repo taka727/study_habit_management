@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const logger = require('./utils/logger');
+const logger = require('../utils/logger');
 
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 12;
 

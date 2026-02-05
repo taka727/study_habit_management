@@ -1,6 +1,6 @@
 const prisma = require("../prismaClient");
 const { Prisma } = require("@prisma/client");
-const logger = require('./utils/logger');
+const logger = require('../utils/logger');
 
 const getAllGoals = async (req, res) => {
   try {
