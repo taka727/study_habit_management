@@ -1,9 +1,9 @@
-const prisma = require("../prismaClient");
-const { Prisma } = require("@prisma/client");
+const prisma = require('../prismaClient');
+const { Prisma } = require('@prisma/client');
 const logger = require('../utils/logger');
 
 const getAllHistories = async (req, res) => {
-  logger.info("start getALLHistories");
+  logger.info('start getALLHistories');
   const {from ,to} = req.query;
   const fromDate = from ? new Date(from) : undefined;
   const toDate = to ? new Date(new Date(to).setHours(23, 59, 59, 999)) : undefined;
@@ -13,138 +13,138 @@ const getAllHistories = async (req, res) => {
     logger.info(toDate);
 
     const histories = await prisma.study_histories.findMany({
-        where:{
-            created_at:{
-                gte:fromDate,
-                lte:toDate,
-            },
-            deleateed_at:null
-        }
+      where:{
+        created_at:{
+          gte:fromDate,
+          lte:toDate,
+        },
+        deleateed_at:null,
+      },
     });
     logger.info(histories);
     res.status(200).json({status:'success',data:histories});
   } catch (error){
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    logger.info("end getALLHistories");
+    logger.info('end getALLHistories');
   }
 };
 
 const createHistory = async (req, res) => {
-  logger.info("start createHistory");
+  logger.info('start createHistory');
   const {task_id, description,occurreed_on,started_at,ended_at} = req.body;
   try {
     const newHistory = await prisma.study_histories.create({
-        data:{
-            task_id,
-            description,
-            occurreed_on,
-            started_at,
-            ended_at
-        }
+      data:{
+        task_id,
+        description,
+        occurreed_on,
+        started_at,
+        ended_at,
+      },
     });
     res.status(201).json({status:'success',data:newHistory});
   } catch (error) {
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    logger.info("end createHistory");
+    logger.info('end createHistory');
   }
 };
 const getHistory = async (req, res) => {
-  logger.info("start getHistory");
+  logger.info('start getHistory');
   const { id } = req.params;
 
   try {
     const history = await prisma.study_histories.findUnique({
-        where:{
-            id:parseInt(id)
-        }
+      where:{
+        id:parseInt(id),
+      },
     });
     res.status(200).json({status:'success',data:history});
   } catch (error) {
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    logger.info("end getHistory");
+    logger.info('end getHistory');
   }
 };
 const updateHistory = async (req, res) => {
-  logger.info("start updateHistory");
+  logger.info('start updateHistory');
   const { id } = req.params;
   const {task_id, description,occurreed_on,started_at,ended_at} = req.body;
 
   try {
     const updatedHistory = await prisma.study_histories.update({
-        where:{
-            id:parseInt(id) 
-        },
-        data:{
-            task_id,
-            description,
-            occurreed_on,
-            started_at,
-            ended_at
-        }
+      where:{
+        id:parseInt(id),
+      },
+      data:{
+        task_id,
+        description,
+        occurreed_on,
+        started_at,
+        ended_at,
+      },
     });
     res.status(200).json({status:'success',data:updatedHistory});
   } catch (error) {
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    logger.info("end updateHistory");
+    logger.info('end updateHistory');
   }
 };
 const deleteHistory = async (req, res) => {
   const { id } = req.params;
-  logger.info("start deleteHistory");
+  logger.info('start deleteHistory');
   try {
-    const deletedHistory = await prisma.study_histories.delete({  
-        where:{
-            id:parseInt(id)
-        }
+    const deletedHistory = await prisma.study_histories.delete({
+      where:{
+        id:parseInt(id),
+      },
     });
     res.status(200).json({status:'success',data:deletedHistory});
   } catch (error) {
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    logger.info("end deleteHistory");
+    logger.info('end deleteHistory');
   }
 };
 const startStudyHistory = async (req, res) => {
-  logger.info("start startStudyHistory");
+  logger.info('start startStudyHistory');
   const { task_id, description, occurreed_on } = req.body;
   try {
     const newHistory = await prisma.study_histories.create({
-        data:{
-            task_id,
-            description,
-            occurreed_on,
-            started_at: new Date(),
-            ended_at: null
-        }
+      data:{
+        task_id,
+        description,
+        occurreed_on,
+        started_at: new Date(),
+        ended_at: null,
+      },
     });
     res.status(201).json({status:'success',data:newHistory});
   } catch (error) {
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    logger.info("end startStudyHistory");
+    logger.info('end startStudyHistory');
   }
 };
 const endStudyHistory = async (req, res) => {
-  logger.info("start endStudyHistory");
+  logger.info('start endStudyHistory');
   const { id } = req.params;
   try {
     const endedHistory = await prisma.study_histories.update({
-        where:{
-            id:parseInt(id)
-        },
-        data:{
-            ended_at: new Date()
-        }
+      where:{
+        id:parseInt(id),
+      },
+      data:{
+        ended_at: new Date(),
+      },
     });
     res.status(200).json({status:'success',data:endedHistory});
   } catch (error) {
     res.status(500).json({status:'error',message:error.message});
   } finally {
-    logger.info("end endStudyHistory");
+    logger.info('end endStudyHistory');
   }
 };
 

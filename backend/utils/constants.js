@@ -18,7 +18,7 @@ const HTTP_STATUS = {
   // サーバーエラー
   INTERNAL_SERVER_ERROR: 500,
   BAD_GATEWAY: 502,
-  SERVICE_UNAVAILABLE: 503
+  SERVICE_UNAVAILABLE: 503,
 };
 
 /**
@@ -46,10 +46,10 @@ const ERROR_MESSAGES = {
 
   // 一般的なエラー
   INTERNAL_ERROR: '内部サーバーエラーが発生しました',
-  BAD_REQUEST: '不正なリクエストです'
+  BAD_REQUEST: '不正なリクエストです',
 };
 
 module.exports = {
   HTTP_STATUS,
-  ERROR_MESSAGES
+  ERROR_MESSAGES,
 };

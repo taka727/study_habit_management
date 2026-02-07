@@ -1,9 +1,9 @@
-const prisma = require("../prismaClient");
-const { Prisma } = require("@prisma/client");
-const logger = require("../utils/logger");
+const prisma = require('../prismaClient');
+const { Prisma } = require('@prisma/client');
+const logger = require('../utils/logger');
 
 const getAllTasks = async (req, res) => {
-  logger.info("📋 getAllTasks: Starting to fetch all tasks");
+  logger.info('📋 getAllTasks: Starting to fetch all tasks');
   try {
     const tasks = await prisma.task.findMany({
       include: {
@@ -13,11 +13,11 @@ const getAllTasks = async (req, res) => {
       },
     });
     logger.info(`getAllTasks: Successfully fetched ${tasks.length} tasks`);
-    logger.info("Tasks data:", JSON.stringify(tasks, null, 2));
-    res.json({ status: "success", data: tasks, count: tasks.length });
+    logger.info('Tasks data:', JSON.stringify(tasks, null, 2));
+    res.json({ status: 'success', data: tasks, count: tasks.length });
   } catch (error) {
-    logger.error("getAllTasks: Error occurred:", error);
-    res.status(500).json({ status: "error", message: "サーバーエラー" });
+    logger.error('getAllTasks: Error occurred:', error);
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   }
 };
 
@@ -31,7 +31,7 @@ const getTaskById = async (req, res) => {
       logger.info(`getTaskById: Invalid task ID provided: ${taskId}`);
       return res
         .status(400)
-        .json({ status: "error", message: "無効なタスクID" });
+        .json({ status: 'error', message: '無効なタスクID' });
     }
 
     logger.info(`getTaskById: Searching for task with valid ID: ${id}`);
@@ -40,28 +40,28 @@ const getTaskById = async (req, res) => {
     });
 
     logger.info(
-      `getTaskById: Successfully found task:`,
+      'getTaskById: Successfully found task:',
       JSON.stringify(task, null, 2),
     );
-    res.json({ status: "success", data: task });
+    res.json({ status: 'success', data: task });
   } catch (error) {
     logger.error(`getTaskById: Error occurred for taskId ${taskId}:`, error);
     if (error instanceof Prisma.NotFoundError) {
       logger.info(`getTaskById: Task not found for ID: ${taskId}`);
       return res
         .status(404)
-        .json({ status: "error", message: "タスクが見つかりません" });
+        .json({ status: 'error', message: 'タスクが見つかりません' });
     } else {
       return res
         .status(500)
-        .json({ status: "error", message: "サーバーエラー" });
+        .json({ status: 'error', message: 'サーバーエラー' });
     }
   }
 };
 
 const createTask = async (req, res) => {
-  logger.info("createTask: Starting to create new task");
-  logger.info("Request body:", JSON.stringify(req.body, null, 2));
+  logger.info('createTask: Starting to create new task');
+  logger.info('Request body:', JSON.stringify(req.body, null, 2));
 
   try {
     const {
@@ -75,10 +75,10 @@ const createTask = async (req, res) => {
 
     // バリデーション
     if (!taskTitle || !taskDescription) {
-      logger.info("createTask: Missing required fields");
+      logger.info('createTask: Missing required fields');
       return res.status(400).json({
-        status: "error",
-        message: "タスクタイトルと説明は必須です",
+        status: 'error',
+        message: 'タスクタイトルと説明は必須です',
       });
     }
 
@@ -99,20 +99,20 @@ const createTask = async (req, res) => {
     });
 
     logger.info(
-      "createTask: Successfully created task:",
+      'createTask: Successfully created task:',
       JSON.stringify(newTask, null, 2),
     );
-    res.status(201).json({ status: "success", data: newTask });
+    res.status(201).json({ status: 'success', data: newTask });
   } catch (error) {
-    logger.error("createTask: Error occurred:", error);
-    res.status(500).json({ status: "error", message: "サーバーエラー" });
+    logger.error('createTask: Error occurred:', error);
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   }
 };
 
 const updateTask = async (req, res) => {
   const { taskId } = req.params;
   logger.info(`updateTask: Starting to update task with ID: ${taskId}`);
-  logger.info("Request body:", JSON.stringify(req.body, null, 2));
+  logger.info('Request body:', JSON.stringify(req.body, null, 2));
 
   try {
     const id = Number(taskId);
@@ -120,7 +120,7 @@ const updateTask = async (req, res) => {
       logger.info(`updateTask: Invalid task ID provided: ${taskId}`);
       return res
         .status(400)
-        .json({ status: "error", message: "無効なタスクID" });
+        .json({ status: 'error', message: '無効なタスクID' });
     }
 
     const {
@@ -152,24 +152,24 @@ const updateTask = async (req, res) => {
     });
 
     logger.info(
-      "updateTask: Successfully updated task:",
+      'updateTask: Successfully updated task:',
       JSON.stringify(updatedTask, null, 2),
     );
-    res.json({ status: "success", data: updatedTask });
+    res.json({ status: 'success', data: updatedTask });
   } catch (error) {
     logger.error(`updateTask: Error occurred for taskId ${taskId}:`, error);
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2025"
+      error.code === 'P2025'
     ) {
       logger.info(`updateTask: Task not found for ID: ${taskId}`);
       return res
         .status(404)
-        .json({ status: "error", message: "タスクが見つかりません" });
+        .json({ status: 'error', message: 'タスクが見つかりません' });
     } else {
       return res
         .status(500)
-        .json({ status: "error", message: "サーバーエラー" });
+        .json({ status: 'error', message: 'サーバーエラー' });
     }
   }
 };
@@ -184,7 +184,7 @@ const deleteTask = async (req, res) => {
       logger.info(`deleteTask: Invalid task ID provided: ${taskId}`);
       return res
         .status(400)
-        .json({ status: "error", message: "無効なタスクID" });
+        .json({ status: 'error', message: '無効なタスクID' });
     }
 
     await prisma.task.delete({
@@ -192,21 +192,21 @@ const deleteTask = async (req, res) => {
     });
 
     logger.info(`deleteTask: Successfully deleted task with ID: ${taskId}`);
-    res.json({ status: "success", message: "タスクが削除されました" });
+    res.json({ status: 'success', message: 'タスクが削除されました' });
   } catch (error) {
     logger.error(`deleteTask: Error occurred for taskId ${taskId}:`, error);
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2025"
+      error.code === 'P2025'
     ) {
       logger.info(`deleteTask: Task not found for ID: ${taskId}`);
       return res
         .status(404)
-        .json({ status: "error", message: "タスクが見つかりません" });
+        .json({ status: 'error', message: 'タスクが見つかりません' });
     } else {
       return res
         .status(500)
-        .json({ status: "error", message: "サーバーエラー" });
+        .json({ status: 'error', message: 'サーバーエラー' });
     }
   }
 };

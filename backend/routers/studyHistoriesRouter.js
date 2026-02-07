@@ -1,13 +1,13 @@
 const express = require('express');
-const { 
-    getAllHistories, 
-    createHistory, 
-    getHistory, 
-    updateHistory, 
-    deleteHistory,
-    startStudyHistory,
-    endStudyHistory
- } = require('../controller/studyHistoriesController');
+const {
+  getAllHistories,
+  createHistory,
+  getHistory,
+  updateHistory,
+  deleteHistory,
+  startStudyHistory,
+  endStudyHistory,
+} = require('../controller/studyHistoriesController');
 
 const router = express.Router();
 
@@ -18,6 +18,5 @@ router.put('/:historyId', updateHistory);
 router.delete('/:historyId', deleteHistory);
 router.post('/', startStudyHistory);
 router.put('/:historyId', endStudyHistory);
-
 
 module.exports = router;

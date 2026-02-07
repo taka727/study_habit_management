@@ -1,52 +1,52 @@
-const prisma = require("../prismaClient");
-const logger = require("../utils/logger");
-const bcrypt = require("bcryptjs");
-const { generateToken } = require("../utils/jwt");
-const { Prisma } = require("@prisma/client");
+const prisma = require('../prismaClient');
+const logger = require('../utils/logger');
+const bcrypt = require('bcryptjs');
+const { generateToken } = require('../utils/jwt');
+const { Prisma } = require('@prisma/client');
 
 const registerUser = async (req, res) => {
-  logger.info("start registerUser");
+  logger.info('start registerUser');
   try {
     const { name, login_name, security_question_id, security_answer } =
       req.body;
 
     if (!name || !login_name || !security_question_id || !security_answer) {
-      logger.info("registerUser: Missing required fields");
+      logger.info('registerUser: Missing required fields');
       return res.status(400).json({
-        status: "error",
+        status: 'error',
         message:
-          "名前、ログイン名、セキュリティ質問、セキュリティ回答は必須です",
+          '名前、ログイン名、セキュリティ質問、セキュリティ回答は必須です',
       });
     }
 
-    if (IsString(login_name)) {
-      logger.info("registerUser: login_name not string.");
+    if (String.IsString(login_name)) {
+      logger.info('registerUser: login_name not string.');
       return res.status(400).json({
-        status: "error",
-        message: "ログイン名は文字列である必要があります。",
+        status: 'error',
+        message: 'ログイン名は文字列である必要があります。',
       });
     }
 
     if (login_name.length < 3 || login_name.length > 255) {
-      logger.info("registerUser: Invalid login_name length");
+      logger.info('registerUser: Invalid login_name length');
       return res.status(400).json({
-        status: "error",
-        message: "ログイン名は3文字以上255文字以下である必要があります",
+        status: 'error',
+        message: 'ログイン名は3文字以上255文字以下である必要があります',
       });
     }
 
     if (security_answer.length < 1) {
-      logger.info("registerUser: Security answer is empty");
+      logger.info('registerUser: Security answer is empty');
       return res.status(400).json({
-        status: "error",
-        message: "セキュリティ回答は必須です",
+        status: 'error',
+        message: 'セキュリティ回答は必須です',
       });
     }
     if (Number.isInteger(security_question_id) && security_question_id > 0) {
-      logger.error("registerUser: sequrity_questionid not Number.");
+      logger.error('registerUser: sequrity_questionid not Number.');
       res.status(400).json({
-        status: "error",
-        message: "秘密の質問IDは整数である必要があります。",
+        status: 'error',
+        message: '秘密の質問IDは整数である必要があります。',
       });
     }
     const questionExists = await prisma.security_questions.findUnique({
@@ -58,13 +58,13 @@ const registerUser = async (req, res) => {
         `registerUser: Security question not found: ${security_question_id}`,
       );
       return res.status(404).json({
-        status: "error",
-        message: "指定されたセキュリティ質問が存在しません",
+        status: 'error',
+        message: '指定されたセキュリティ質問が存在しません',
       });
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      logger.info("start transaction for registUser");
+      logger.info('start transaction for registUser');
       try {
         const newUser = await tx.users.create({
           data: {
@@ -91,12 +91,13 @@ const registerUser = async (req, res) => {
             answer_hash: answerHash,
           },
         });
+        return newUser;
+
       } catch (ex) {
         logger.error(ex.message);
-        throw error("transaction failer");
+        throw new Error('transaction failer');
       } finally {
-        logger.info("end transaction for registUser");
-        return newUser;
+        logger.info('end transaction for registUser');
       }
     });
 
@@ -109,41 +110,41 @@ const registerUser = async (req, res) => {
       `registerUser: Successfully registered user with ID: ${result.id}`,
     );
     res.status(201).json({
-      status: "success",
-      message: "ユーザー登録が完了しました",
+      status: 'success',
+      message: 'ユーザー登録が完了しました',
       data: {
         user: result,
         token,
       },
     });
   } catch (error) {
-    logger.error("registerUser: Error occurred:", error);
+    logger.error('registerUser: Error occurred:', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        logger.info("registerUser: Duplicate login_name");
+      if (error.code === 'P2002') {
+        logger.info('registerUser: Duplicate login_name');
         return res.status(409).json({
-          status: "error",
-          message: "このログイン名は既に使用されています",
+          status: 'error',
+          message: 'このログイン名は既に使用されています',
         });
       }
     }
-    res.status(500).json({ status: "error", message: "サーバーエラー" });
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
-    logger.info("end registerUser");
+    logger.info('end registerUser');
   }
 };
 
 const loginUser = async (req, res) => {
-  logger.info("start loginUser");
+  logger.info('start loginUser');
   try {
     const { login_name, security_answer } = req.body;
 
     // バリデーション
     if (!login_name || !security_answer) {
-      logger.info("loginUser: Missing required fields");
+      logger.info('loginUser: Missing required fields');
       return res.status(400).json({
-        status: "error",
-        message: "ログイン名とセキュリティ回答は必須です",
+        status: 'error',
+        message: 'ログイン名とセキュリティ回答は必須です',
       });
     }
 
@@ -158,8 +159,8 @@ const loginUser = async (req, res) => {
     if (!user) {
       logger.info(`loginUser: User not found: ${login_name}`);
       return res.status(401).json({
-        status: "error",
-        message: "ログイン名またはセキュリティ回答が正しくありません",
+        status: 'error',
+        message: 'ログイン名またはセキュリティ回答が正しくありません',
       });
     }
 
@@ -171,8 +172,8 @@ const loginUser = async (req, res) => {
     if (!securityAnswer) {
       logger.info(`loginUser: Security answer not found for user: ${user.id}`);
       return res.status(401).json({
-        status: "error",
-        message: "ログイン名またはセキュリティ回答が正しくありません",
+        status: 'error',
+        message: 'ログイン名またはセキュリティ回答が正しくありません',
       });
     }
 
@@ -185,8 +186,8 @@ const loginUser = async (req, res) => {
     if (!isValid) {
       logger.info(`loginUser: Invalid security answer for user: ${user.id}`);
       return res.status(401).json({
-        status: "error",
-        message: "ログイン名またはセキュリティ回答が正しくありません",
+        status: 'error',
+        message: 'ログイン名またはセキュリティ回答が正しくありません',
       });
     }
 
@@ -198,8 +199,8 @@ const loginUser = async (req, res) => {
 
     logger.info(`loginUser: Successfully logged in user with ID: ${user.id}`);
     res.status(200).json({
-      status: "success",
-      message: "ログインしました",
+      status: 'success',
+      message: 'ログインしました',
       data: {
         user: {
           id: user.id,
@@ -210,15 +211,15 @@ const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    logger.error("loginUser: Error occurred:", error);
-    res.status(500).json({ status: "error", message: "サーバーエラー" });
+    logger.error('loginUser: Error occurred:', error);
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
-    logger.info("end loginUser");
+    logger.info('end loginUser');
   }
 };
 
 const getSecurityQuestion = async (req, res) => {
-  logger.info("start getSecurityQuestion");
+  logger.info('start getSecurityQuestion');
   try {
     // 削除されていないセキュリティ質問を全て取得
     const questions = await prisma.security_questions.findMany({
@@ -230,7 +231,7 @@ const getSecurityQuestion = async (req, res) => {
         question: true,
       },
       orderBy: {
-        id: "asc",
+        id: 'asc',
       },
     });
 
@@ -238,19 +239,19 @@ const getSecurityQuestion = async (req, res) => {
       `getSecurityQuestion: Successfully fetched ${questions.length} questions`,
     );
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: questions,
     });
   } catch (error) {
-    logger.error("getSecurityQuestion: Error occurred:", error);
-    res.status(500).json({ status: "error", message: "サーバーエラー" });
+    logger.error('getSecurityQuestion: Error occurred:', error);
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
-    logger.info("end getSecurityQuestion");
+    logger.info('end getSecurityQuestion');
   }
 };
 
 const logoutUser = async (req, res) => {
-  logger.info("start logoutUser");
+  logger.info('start logoutUser');
   try {
     // JWTベースの認証では、ログアウトは主にクライアント側でトークンを削除することで実現
     // サーバー側ではログアウトの記録のみを行う
@@ -261,18 +262,18 @@ const logoutUser = async (req, res) => {
     if (userId) {
       logger.info(`logoutUser: User ${userId} logged out`);
     } else {
-      logger.info("logoutUser: Logout request received (no user info)");
+      logger.info('logoutUser: Logout request received (no user info)');
     }
 
     res.status(200).json({
-      status: "success",
-      message: "ログアウトしました",
+      status: 'success',
+      message: 'ログアウトしました',
     });
   } catch (error) {
-    logger.error("logoutUser: Error occurred:", error);
-    res.status(500).json({ status: "error", message: "サーバーエラー" });
+    logger.error('logoutUser: Error occurred:', error);
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
-    logger.info("end logoutUser");
+    logger.info('end logoutUser');
   }
 };
 
