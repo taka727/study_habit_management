@@ -19,6 +19,14 @@ const registerUser = async (req, res) => {
       });
     }
 
+    if (IsString(login_name)){
+      logger.info("registerUser: login_name not string.");
+      return res.status(400).json({
+        status: "error",
+        message:"ログイン名は文字列である必要があります。"
+      });
+    }
+
     if (login_name.length < 3 || login_name.length > 255) {
       logger.info("registerUser: Invalid login_name length");
       return res.status(400).json({
