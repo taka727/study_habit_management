@@ -66,3 +66,7 @@ mysql-init/
 # Docker volumes
 **/mysql-data/
 **/mysql-init/
+
+# Personal notes and AI chat logs
+claude.md
+*.md.tmp
