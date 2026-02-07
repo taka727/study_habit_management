@@ -19,7 +19,7 @@ const registerUser = async (req, res) => {
       });
     }
 
-    if (IsString(login_name)) {
+    if (String.IsString(login_name)) {
       logger.info('registerUser: login_name not string.');
       return res.status(400).json({
         status: 'error',
@@ -91,12 +91,13 @@ const registerUser = async (req, res) => {
             answer_hash: answerHash,
           },
         });
+        return newUser;
+
       } catch (ex) {
         logger.error(ex.message);
-        throw error('transaction failer');
+        throw new Error('transaction failer');
       } finally {
         logger.info('end transaction for registUser');
-        return newUser;
       }
     });
 
