@@ -42,7 +42,13 @@ const registerUser = async (req, res) => {
         message: "セキュリティ回答は必須です",
       });
     }
-
+    if (Number.isInteger(security_question_id) && security_question_id > 0) {
+      logger.error("registerUser: sequrity_questionid not Number.");
+      res.status(400).json({
+        status: "error",
+        message: "秘密の質問IDは整数である必要があります。",
+      });
+    }
     const questionExists = await prisma.security_questions.findUnique({
       where: { id: security_question_id },
     });
@@ -58,33 +64,40 @@ const registerUser = async (req, res) => {
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      const newUser = await tx.users.create({
-        data: {
-          name,
-          login_name,
-        },
-        select: {
-          id: true,
-          name: true,
-          login_name: true,
-          created_at: true,
-        },
-      });
+      logger.info("start transaction for registUser");
+      try {
+        const newUser = await tx.users.create({
+          data: {
+            name,
+            login_name,
+          },
+          select: {
+            id: true,
+            name: true,
+            login_name: true,
+            created_at: true,
+          },
+        });
 
-      const salt = await bcrypt.genSalt(10);
-      const answerHash = await bcrypt.hash(security_answer, salt);
-      const qid = parseInt(security_question_id);
-      
-      await tx.security_question_answers.create({
-        data: {
-          question_id: qid,
-          user_id: newUser.id,
-          answer_salt: salt,
-          answer_hash: answerHash,
-        },
-      });
+        const salt = await bcrypt.genSalt(10);
+        const answerHash = await bcrypt.hash(security_answer, salt);
+        const qid = parseInt(security_question_id);
 
-      return newUser;
+        await tx.security_question_answers.create({
+          data: {
+            question_id: qid,
+            user_id: newUser.id,
+            answer_salt: salt,
+            answer_hash: answerHash,
+          },
+        });
+      } catch (ex) {
+        logger.error(ex.message);
+        throw error("transaction failer");
+      } finally {
+        logger.info("end transaction for registUser");
+        return newUser;
+      }
     });
 
     const token = generateToken({

@@ -32,7 +32,7 @@ const getUser = async (req, res) => {
     res.status(200).json({ status: "success", data: user });
   } catch (error) {
     logger.error("getUser: Error occurred:", error);
-    res.status(500).json({ status: "error", message: error.message });
+    res.status(500).json({ status: "error", message: "サーバーエラー" });
   } finally {
     logger.info("end getUser");
   }
@@ -56,8 +56,8 @@ const updateUser = async (req, res) => {
 
     // 更新するデータを動的に作成
     const updateData = {};
-    if (name !== undefined) updateData.name = name;
-    if (login_name !== undefined) updateData.login_name = login_name;
+    if (name !== undefined && 0 < name && name <100) updateData.name = name;
+    if (login_name !== undefined && 3<login_name && login_name <255) updateData.login_name = login_name;
 
     logger.info(
       `updateUser: Updating user ID: ${userId} with data:`,
