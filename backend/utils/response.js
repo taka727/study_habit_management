@@ -14,7 +14,7 @@ const sendSuccessResponse = (res, data = null, message = 'Success', status = 200
     success: true,
     message: message,
     data: data,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 };
 
@@ -31,7 +31,7 @@ const sendErrorResponse = (res, status, message, details = null) => {
     error: true,
     message: message,
     code: status,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 
   // 開発環境でのみエラー詳細を含める
@@ -54,7 +54,7 @@ const sendValidationErrorResponse = (res, errors) => {
     message: 'バリデーションエラーが発生しました',
     code: 400,
     errors: errors,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 };
 
@@ -76,9 +76,9 @@ const sendPaginatedResponse = (res, data, pagination, message = 'Success') => {
       totalItems: pagination.totalItems,
       itemsPerPage: pagination.itemsPerPage,
       hasNextPage: pagination.hasNextPage,
-      hasPrevPage: pagination.hasPrevPage
+      hasPrevPage: pagination.hasPrevPage,
     },
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 };
 
@@ -86,5 +86,5 @@ module.exports = {
   sendSuccessResponse,
   sendErrorResponse,
   sendValidationErrorResponse,
-  sendPaginatedResponse
+  sendPaginatedResponse,
 };

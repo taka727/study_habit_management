@@ -1,9 +1,9 @@
-const prisma = require("../prismaClient");
-const logger = require("../utils/logger");
-const { Prisma } = require("@prisma/client");
+const prisma = require('../prismaClient');
+const logger = require('../utils/logger');
+const { Prisma } = require('@prisma/client');
 
 const getUser = async (req, res) => {
-  logger.info("start getUser");
+  logger.info('start getUser');
   try {
     // 認証ミドルウェアからユーザーIDを取得（または固定値）
     const userId = req.user?.id || 1;
@@ -25,21 +25,21 @@ const getUser = async (req, res) => {
       logger.info(`getUser: User not found with ID: ${userId}`);
       return res
         .status(404)
-        .json({ status: "error", message: "ユーザが存在しません" });
+        .json({ status: 'error', message: 'ユーザが存在しません' });
     }
 
     logger.info(`getUser: Successfully fetched user with ID: ${userId}`);
-    res.status(200).json({ status: "success", data: user });
+    res.status(200).json({ status: 'success', data: user });
   } catch (error) {
-    logger.error("getUser: Error occurred:", error);
-    res.status(500).json({ status: "error", message: "サーバーエラー" });
+    logger.error('getUser: Error occurred:', error);
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
-    logger.info("end getUser");
+    logger.info('end getUser');
   }
 };
 
 const updateUser = async (req, res) => {
-  logger.info("start updateUser");
+  logger.info('start updateUser');
   try {
     // 認証ミドルウェアからユーザーIDを取得（または固定値）
     const userId = req.user?.id || 1;
@@ -47,10 +47,10 @@ const updateUser = async (req, res) => {
 
     // バリデーション
     if (!name && !login_name) {
-      logger.info("updateUser: No fields to update");
+      logger.info('updateUser: No fields to update');
       return res.status(400).json({
-        status: "error",
-        message: "更新する項目が指定されていません",
+        status: 'error',
+        message: '更新する項目が指定されていません',
       });
     }
 
@@ -77,33 +77,33 @@ const updateUser = async (req, res) => {
     });
 
     logger.info(`updateUser: Successfully updated user with ID: ${userId}`);
-    res.status(200).json({ status: "success", data: updatedUser });
+    res.status(200).json({ status: 'success', data: updatedUser });
   } catch (error) {
-    logger.error("updateUser: Error occurred:", error);
+    logger.error('updateUser: Error occurred:', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        logger.info("updateUser: Unique constraint violation (login_name)");
+      if (error.code === 'P2002') {
+        logger.info('updateUser: Unique constraint violation (login_name)');
         return res.status(409).json({
-          status: "error",
-          message: "このログイン名は既に使用されています",
+          status: 'error',
+          message: 'このログイン名は既に使用されています',
         });
       }
-      if (error.code === "P2025") {
-        logger.info("updateUser: User not found");
+      if (error.code === 'P2025') {
+        logger.info('updateUser: User not found');
         return res.status(404).json({
-          status: "error",
-          message: "ユーザが存在しません",
+          status: 'error',
+          message: 'ユーザが存在しません',
         });
       }
     }
-    res.status(500).json({ status: "error", message: "サーバーエラー" });
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
-    logger.info("end updateUser");
+    logger.info('end updateUser');
   }
 };
 
 const deleteUser = async (req, res) => {
-  logger.info("start deleteUser");
+  logger.info('start deleteUser');
   try {
     // 認証ミドルウェアからユーザーIDを取得（または固定値）
     const userId = req.user?.id || 1;
@@ -131,24 +131,24 @@ const deleteUser = async (req, res) => {
       `deleteUser: Successfully soft-deleted user with ID: ${userId}`,
     );
     res.status(200).json({
-      status: "success",
-      message: "ユーザを削除しました",
+      status: 'success',
+      message: 'ユーザを削除しました',
       data: deletedUser,
     });
   } catch (error) {
-    logger.error("deleteUser: Error occurred:", error);
+    logger.error('deleteUser: Error occurred:', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        logger.info("deleteUser: User not found");
+      if (error.code === 'P2025') {
+        logger.info('deleteUser: User not found');
         return res.status(404).json({
-          status: "error",
-          message: "ユーザが存在しません",
+          status: 'error',
+          message: 'ユーザが存在しません',
         });
       }
     }
-    res.status(500).json({ status: "error", message: "サーバーエラー" });
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
-    logger.info("end deleteUser");
+    logger.info('end deleteUser');
   }
 };
 

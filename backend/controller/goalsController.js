@@ -1,10 +1,10 @@
-const prisma = require("../prismaClient");
-const { Prisma } = require("@prisma/client");
+const prisma = require('../prismaClient');
+const { Prisma } = require('@prisma/client');
 const logger = require('../utils/logger');
 
 const getAllGoals = async (req, res) => {
   try {
-    logger.info("start");
+    logger.info('start');
     const Goal = await prisma.goals.findMany({
       where: {
         deleateed_at: null,
@@ -17,11 +17,11 @@ const getAllGoals = async (req, res) => {
       },
     });
     logger.info(Goal);
-    res.status(200).json({ status: "success", data: Goal });
+    res.status(200).json({ status: 'success', data: Goal });
   } catch (error) {
     res
       .status(500)
-      .json({ status: "error", message: "サーバーエラー:" + error.message });
+      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
   }
 };
 
@@ -41,20 +41,20 @@ const getGoalById = async (req, res) => {
         goal_deadline: true,
       },
     });
-    res.status(200).json({ status: "success", data: Goal });
+    res.status(200).json({ status: 'success', data: Goal });
   } catch (error) {
     res
       .status(500)
-      .json({ status: "error", message: "サーバーエラー:" + error.message });
+      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
   }
 };
 
 const createGoal = async (req, res) => {
   const { name, description, goal_deadline } = req.body;
   try {
-    logger.info("name：" + name);
-    logger.info("description：" + description);
-    logger.info("deadline：" + goal_deadline);
+    logger.info('name：' + name);
+    logger.info('description：' + description);
+    logger.info('deadline：' + goal_deadline);
     const Goal = await prisma.goals.create({
       data: {
         name: name,
@@ -63,11 +63,11 @@ const createGoal = async (req, res) => {
       },
     });
     logger.info(Goal);
-    res.status(201).json({ status: "success", Goal });
+    res.status(201).json({ status: 'success', Goal });
   } catch (error) {
     res
       .status(500)
-      .json({ status: "error", message: "サーバーエラー:" + error.message });
+      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
   }
 };
 
@@ -75,9 +75,9 @@ const updateGoal = async (req, res) => {
   const { id } = req.params;
   const { name, description, goal_deadline } = req.body;
   try {
-    logger.info("name：" + name);
-    logger.info("description：" + description);
-    logger.info("deadline：" + goal_deadline);
+    logger.info('name：' + name);
+    logger.info('description：' + description);
+    logger.info('deadline：' + goal_deadline);
     const Goal = await prisma.goals.update({
       where: { id: parseInt(id) },
       data: {
@@ -87,18 +87,18 @@ const updateGoal = async (req, res) => {
       },
     });
     logger.info(Goal);
-    res.status(201).json({ status: "success", Goal });
+    res.status(201).json({ status: 'success', Goal });
   } catch (error) {
     res
       .status(500)
-      .json({ status: "error", message: "サーバーエラー:" + error.message });
+      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
   }
 };
 
 const deleteGoal = async (req, res) => {
   const { id } = req.params;
   try {
-    logger.info("id:" + id);
+    logger.info('id:' + id);
     const Goal = await prisma.goals.update({
       where: { id: parseInt(id) },
       data: {
@@ -106,11 +106,11 @@ const deleteGoal = async (req, res) => {
       },
     });
     logger.info(Goal);
-    res.status(204).json({ status: "success", Goal });
+    res.status(204).json({ status: 'success', Goal });
   } catch (error) {
     res.status(500).json({
-      status: "error",
-      message: "サーバーエラー：" + error.message,
+      status: 'error',
+      message: 'サーバーエラー：' + error.message,
     });
   }
 };
