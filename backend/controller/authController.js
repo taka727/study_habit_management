@@ -19,11 +19,11 @@ const registerUser = async (req, res) => {
       });
     }
 
-    if (IsString(login_name)){
+    if (IsString(login_name)) {
       logger.info("registerUser: login_name not string.");
       return res.status(400).json({
         status: "error",
-        message:"ログイン名は文字列である必要があります。"
+        message: "ログイン名は文字列である必要があります。",
       });
     }
 
@@ -74,6 +74,7 @@ const registerUser = async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       const answerHash = await bcrypt.hash(security_answer, salt);
       const qid = parseInt(security_question_id);
+      
       await tx.security_question_answers.create({
         data: {
           question_id: qid,
