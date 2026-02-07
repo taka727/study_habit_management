@@ -71,13 +71,12 @@ const registerUser = async (req, res) => {
         },
       });
 
-      // セキュリティ回答は短い可能性があるため、直接bcryptでハッシュ化
       const salt = await bcrypt.genSalt(10);
       const answerHash = await bcrypt.hash(security_answer, salt);
-
+      const qid = parseInt(security_question_id);
       await tx.security_question_answers.create({
         data: {
-          question_id: parseInt(security_question_id),
+          question_id: qid,
           user_id: newUser.id,
           answer_salt: salt,
           answer_hash: answerHash,
