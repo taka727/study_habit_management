@@ -4,10 +4,15 @@ const mysql = require('mysql2');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
+const logger = require('./utils/logger');
+
+// ルーティングを定義
 const taskRoutes = require("./routers/tasksRouter");
 const bookRoutes = require("./routers/booksRouter");
 const goalsRoutes = require("./routers/goalsRouter");
 const historyiesRoutes = require("./routers/studyHistoriesRouter");
+const userRoutes = require("./routers/userRouter");
+const authRoutes = require("./routers/authRouter");
 
 const app = express();
 const port = process.env.BACKEND_PORT || process.env.PORT || 3000;
@@ -15,7 +20,7 @@ const prisma = require('./prismaClient');
 
 // CORS設定
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || 'http://localhost:3000');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
@@ -24,7 +29,7 @@ app.use((req, res, next) => {
 // ログミドルウェア
 app.use((req, res, next) => {
     const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${req.method} ${req.url}`);
+    logger.info(`[${timestamp}] ${req.method} ${req.url}`);
     next();
 });
 
@@ -40,9 +45,9 @@ const db = mysql.createConnection({
 
 db.connect(err => {
     if (err) {
-        console.error('DB connection failed:', err);
+        logger.error('DB connection failed:', err);
     } else {
-        console.log('Connected to MySQL');
+        logger.info('Connected to MySQL');
     }
 });
 const swaggerDocument = YAML.load(path.join(__dirname, './document/OpenAPI/OpenAPI_v1.yaml'));
@@ -72,25 +77,27 @@ app.use('/tasks',taskRoutes);
 app.use('/books',bookRoutes);
 app.use('/goals',goalsRoutes);
 app.use('/history',historyiesRoutes);
+app.use('/user',userRoutes);
+app.use('/auth',authRoutes);
 
 
 app.get('/', (req, res) => {
-    console.log('✅ Root endpoint accessed');
+    logger.info('Root endpoint accessed');
     res.json({ message: 'Hello, Backend is running!', timestamp: new Date().toISOString() });
 });
 
 app.listen(port, () => {
-    console.log(`🚀 Server is running on http://localhost:${port}`);
+    logger.info(`Server is running on http://localhost:${port}`);
 });
 
 app.get('/users', async (req, res) => {
-    console.log('👥 Get users endpoint called');
+    logger.info('Get users endpoint called');
     try {
         const users = await prisma.users.findMany();
-        console.log(`✅ Found ${users.length} users`);
+        logger.info(`✅ Found ${users.length} users`);
         res.json({ status: 'success', data: users });
     } catch (error) {
-        console.error('❌ Error fetching users:', error);
+        logger.error('❌ Error fetching users:', error);
         res.status(500).json({ status: 'error', message: 'サーバーエラー' });
     }
 });

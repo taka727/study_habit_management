@@ -1,9 +1,10 @@
 const prisma = require("../prismaClient");
 const { Prisma } = require("@prisma/client");
+const logger = require('../utils/logger');
 
 const getAllBooks = async (req, res) => {
   try {
-    console.log("start");
+    logger.info("start");
     const book = await prisma.book_managements.findMany({
       select: {
         id: true,
@@ -11,7 +12,7 @@ const getAllBooks = async (req, res) => {
         desicription: true,
       },
     });
-    console.log(book);
+    logger.info(book);
     res.status(200).json({ status: "success", data: book });
   } catch (error) {
     res
@@ -58,8 +59,8 @@ const createBook = async (req, res) => {
         message:'タイトルが不足しています'
       })
     }
-    console.log("title：" + title);
-    console.log("desicription：" + desicription);
+    logger.info("title：" + title);
+    logger.info("desicription：" + desicription);
     
     const book = await prisma.book_managements.create({
       data: {
@@ -67,7 +68,7 @@ const createBook = async (req, res) => {
         desicription: desicription,
       },
     });
-    console.log(book);
+    logger.info(book);
     res.status(201).json({ status: "success", book });
   } catch (error) {
     res
@@ -80,8 +81,8 @@ const updateBook = async (req, res) => {
   const { id } = req.params;
   const { title, desicription } = req.body;
   try {
-    console.log("title：" + title);
-    console.log("desicription：" + desicription);
+    logger.info("title：" + title);
+    logger.info("desicription：" + desicription);
     const book = await prisma.book_managements.update({
       where: { id: parseInt(id) },
       data: {
@@ -89,7 +90,7 @@ const updateBook = async (req, res) => {
         desicription: desicription,
       },
     });
-    console.log(book);
+    logger.info(book);
     res.status(200).json({ status: "success", book });
   } catch (error) {
     if (
@@ -113,14 +114,14 @@ const updateBook = async (req, res) => {
 const deleteBook = async (req, res) => {
   const { id } = req.params;
   try {
-    console.log("id:" + id);
+    logger.info("id:" + id);
     const book = await prisma.book_managements.update({
       where: { id: parseInt(id) },
       data: {
         deleateed_at: new Date(),
       },
     });
-    console.log(book);
+    logger.info(book);
     res.status(204).json({status:"success",book});
   }catch(error){
     if (

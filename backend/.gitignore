@@ -2,7 +2,7 @@
 .env
 .env.docker
 .env.example
-
+.env.local
 # Ignore node_modules
 node_modules/
 **/node_modules/

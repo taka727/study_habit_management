@@ -1,9 +1,10 @@
 const prisma = require("../prismaClient");
 const { Prisma } = require("@prisma/client");
+const logger = require('../utils/logger');
 
 const getAllGoals = async (req, res) => {
   try {
-    console.log("start");
+    logger.info("start");
     const Goal = await prisma.goals.findMany({
       where: {
         deleateed_at: null,
@@ -15,7 +16,7 @@ const getAllGoals = async (req, res) => {
         goal_deadline: true,
       },
     });
-    console.log(Goal);
+    logger.info(Goal);
     res.status(200).json({ status: "success", data: Goal });
   } catch (error) {
     res
@@ -51,9 +52,9 @@ const getGoalById = async (req, res) => {
 const createGoal = async (req, res) => {
   const { name, description, goal_deadline } = req.body;
   try {
-    console.log("name：" + name);
-    console.log("description：" + description);
-    console.log("deadline：" + goal_deadline);
+    logger.info("name：" + name);
+    logger.info("description：" + description);
+    logger.info("deadline：" + goal_deadline);
     const Goal = await prisma.goals.create({
       data: {
         name: name,
@@ -61,7 +62,7 @@ const createGoal = async (req, res) => {
         goal_deadline: goal_deadline,
       },
     });
-    console.log(Goal);
+    logger.info(Goal);
     res.status(201).json({ status: "success", Goal });
   } catch (error) {
     res
@@ -74,9 +75,9 @@ const updateGoal = async (req, res) => {
   const { id } = req.params;
   const { name, description, goal_deadline } = req.body;
   try {
-    console.log("name：" + name);
-    console.log("description：" + description);
-    console.log("deadline：" + goal_deadline);
+    logger.info("name：" + name);
+    logger.info("description：" + description);
+    logger.info("deadline：" + goal_deadline);
     const Goal = await prisma.goals.update({
       where: { id: parseInt(id) },
       data: {
@@ -85,7 +86,7 @@ const updateGoal = async (req, res) => {
         goal_deadline: goal_deadline,
       },
     });
-    console.log(Goal);
+    logger.info(Goal);
     res.status(201).json({ status: "success", Goal });
   } catch (error) {
     res
@@ -97,14 +98,14 @@ const updateGoal = async (req, res) => {
 const deleteGoal = async (req, res) => {
   const { id } = req.params;
   try {
-    console.log("id:" + id);
+    logger.info("id:" + id);
     const Goal = await prisma.goals.update({
       where: { id: parseInt(id) },
       data: {
         deleateed_at: new Date(),
       },
     });
-    console.log(Goal);
+    logger.info(Goal);
     res.status(204).json({ status: "success", Goal });
   } catch (error) {
     res.status(500).json({

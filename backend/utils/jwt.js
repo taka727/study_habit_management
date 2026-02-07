@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const logger = require("../utils/logger");
 
 // 環境変数の設定（文字列として取得）
 const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-key';
@@ -19,7 +20,7 @@ const generateToken = (payload, expiresIn = JWT_EXPIRES_IN) => {
         });
         return token;
     } catch (error) {
-        console.error('トークン生成エラー:', error);
+        logger.error('トークン生成エラー:', error);
         throw new Error('トークンの生成に失敗しました');
     }
 };
@@ -55,7 +56,7 @@ const generateRefreshToken = (payload) => {
             { expiresIn: JWT_REFRESH_EXPIRES_IN }
         );
     } catch (error) {
-        console.error('リフレッシュトークン生成エラー:', error);
+        logger.error('リフレッシュトークン生成エラー:', error);
         throw new Error('リフレッシュトークンの生成に失敗しました');
     }
 };
@@ -93,7 +94,7 @@ const refreshTokens = async (refreshToken) => {
         };
         
     } catch (error) {
-        console.error('トークン更新エラー:', error);
+        logger.error('トークン更新エラー:', error);
         throw new Error('トークンの更新に失敗しました');
     }
 };
@@ -107,7 +108,7 @@ const decodeToken = (token) => {
     try {
         return jwt.decode(token);
     } catch (error) {
-        console.error('トークンデコードエラー:', error);
+        logger.error('トークンデコードエラー:', error);
         return null;
     }
 };

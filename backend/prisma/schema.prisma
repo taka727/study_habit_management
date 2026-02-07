@@ -41,7 +41,7 @@ model security_questions {
 
 model security_question_answers {
   id           Int       @id @default(autoincrement())
-  question_id  Int       @unique
+  question_id  Int       
   user_id      Int       @unique
   answer_salt  String    @db.VarChar(255)
   answer_hash  String    @db.VarChar(255)
