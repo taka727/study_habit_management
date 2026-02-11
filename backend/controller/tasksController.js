@@ -5,7 +5,7 @@ const logger = require('../utils/logger');
 const getAllTasks = async (req, res) => {
   logger.info('📋 getAllTasks: Starting to fetch all tasks');
   try {
-    const tasks = await prisma.task.findMany({
+    const tasks = await prisma.tasks.findMany({
       include: {
         user: true,
         status: true,
@@ -35,7 +35,7 @@ const getTaskById = async (req, res) => {
     }
 
     logger.info(`getTaskById: Searching for task with valid ID: ${id}`);
-    const task = await prisma.task.findUniqueOrThrow({
+    const task = await prisma.tasks.findUniqueOrThrow({
       where: { id: id },
     });
 
@@ -82,7 +82,7 @@ const createTask = async (req, res) => {
       });
     }
 
-    const newTask = await prisma.task.create({
+    const newTask = await prisma.tasks.create({
       data: {
         taskTitle,
         taskDescription,
@@ -141,7 +141,7 @@ const updateTask = async (req, res) => {
     if (taskEndTime !== undefined)
       updateData.taskEndTime = new Date(taskEndTime);
 
-    const updatedTask = await prisma.task.update({
+    const updatedTask = await prisma.tasks.update({
       where: { id: id },
       data: updateData,
       include: {
@@ -187,7 +187,7 @@ const deleteTask = async (req, res) => {
         .json({ status: 'error', message: '無効なタスクID' });
     }
 
-    await prisma.task.delete({
+    await prisma.tasks.delete({
       where: { id: id },
     });
 
