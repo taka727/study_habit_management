@@ -32,6 +32,8 @@ individualDev/
 .Trashes
 ehthumbs.db
 Thumbs.db
+document
+document/
 
 # Logs
 logs
@@ -70,3 +72,4 @@ mysql-init/
 # Personal notes and AI chat logs
 claude.md
 *.md.tmp
+.claude
