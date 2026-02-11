@@ -2,7 +2,10 @@ const jwt = require('jsonwebtoken');
 const logger = require('../utils/logger');
 
 // 環境変数の設定（文字列として取得）
-const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
+if(!JWT_SECRET){
+  throw new Error('JWT_SECRET enviroment variable is required.');
+}
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
 
