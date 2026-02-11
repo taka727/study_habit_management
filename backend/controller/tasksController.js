@@ -67,7 +67,6 @@ const createTask = async (req, res) => {
     const {
       taskTitle,
       taskDescription,
-      userId,
       taskStatusId,
       taskStartTime,
       taskEndTime,
@@ -84,12 +83,11 @@ const createTask = async (req, res) => {
 
     const newTask = await prisma.tasks.create({
       data: {
-        taskTitle,
-        taskDescription,
-        userId: userId || 1, // デフォルトユーザーID
-        taskStatusId: taskStatusId || 1, // デフォルトステータス
-        taskStartTime: taskStartTime ? new Date(taskStartTime) : new Date(),
-        taskEndTime: taskEndTime ? new Date(taskEndTime) : new Date(),
+        name: taskTitle,
+        description: taskDescription,
+        status : taskStatusId || 1,
+        exec_expected_date: new Date(taskStartTime),
+        deadline: new Date(taskEndTime),
       },
       include: {
         user: true,
