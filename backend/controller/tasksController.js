@@ -5,13 +5,7 @@ const logger = require('../utils/logger');
 const getAllTasks = async (req, res) => {
   logger.info('📋 getAllTasks: Starting to fetch all tasks');
   try {
-    const tasks = await prisma.tasks.findMany({
-      include: {
-        user: true,
-        status: true,
-        subtasks: true,
-      },
-    });
+    const tasks = await prisma.tasks.findMany();
     logger.info(`getAllTasks: Successfully fetched ${tasks.length} tasks`);
     logger.info('Tasks data:', JSON.stringify(tasks, null, 2));
     res.json({ status: 'success', data: tasks, count: tasks.length });
@@ -85,14 +79,9 @@ const createTask = async (req, res) => {
       data: {
         name: taskTitle,
         description: taskDescription,
-        status : taskStatusId || 1,
+        status : taskStatusId || 'TODO',
         exec_expected_date: new Date(taskStartTime),
         deadline: new Date(taskEndTime),
-      },
-      include: {
-        user: true,
-        status: true,
-        subtasks: true,
       },
     });
 
@@ -130,23 +119,18 @@ const updateTask = async (req, res) => {
     } = req.body;
 
     const updateData = {};
-    if (taskTitle !== undefined) updateData.taskTitle = taskTitle;
+    if (taskTitle !== undefined) updateData.name = taskTitle;
     if (taskDescription !== undefined)
-      updateData.taskDescription = taskDescription;
-    if (taskStatusId !== undefined) updateData.taskStatusId = taskStatusId;
+      updateData.description = taskDescription;
+    if (taskStatusId !== undefined) updateData.status = taskStatusId;
     if (taskStartTime !== undefined)
-      updateData.taskStartTime = new Date(taskStartTime);
+      updateData.exec_expected_date = new Date(taskStartTime);
     if (taskEndTime !== undefined)
-      updateData.taskEndTime = new Date(taskEndTime);
+      updateData.deadline = new Date(taskEndTime);
 
     const updatedTask = await prisma.tasks.update({
       where: { id: id },
       data: updateData,
-      include: {
-        user: true,
-        status: true,
-        subtasks: true,
-      },
     });
 
     logger.info(
