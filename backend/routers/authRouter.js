@@ -1,4 +1,5 @@
 const express = require('express');
+const { authenticateToken } = require('../middleware/auth');
 const {
   registerUser,
   loginUser,
@@ -11,6 +12,6 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/security-question', getSecurityQuestion);
-router.post('/logout', logoutUser);
+router.post('/logout', authenticateToken, logoutUser);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const express = require('express');
+const { authenticateToken } = require('../middleware/auth');
 const {
   getAllHistories,
   createHistory,
@@ -11,12 +12,12 @@ const {
 
 const router = express.Router();
 
-router.get('/', getAllHistories);
-router.post('/', createHistory);
-router.get('/:historyId', getHistory);
-router.put('/:historyId', updateHistory);
-router.delete('/:historyId', deleteHistory);
-router.post('/', startStudyHistory);
-router.put('/:historyId', endStudyHistory);
+router.get('/', authenticateToken, getAllHistories);
+router.post('/', authenticateToken, createHistory);
+router.get('/:historyId', authenticateToken, getHistory);
+router.put('/:historyId', authenticateToken, updateHistory);
+router.delete('/:historyId', authenticateToken, deleteHistory);
+router.post('/', authenticateToken, startStudyHistory);
+router.put('/:historyId', authenticateToken, endStudyHistory);
 
 module.exports = router;

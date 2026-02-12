@@ -6,16 +6,12 @@ const prisma = new PrismaClient();
 
 const authenticateToken = async (req,res, next) => {
   try{
-    // 1. Authorizationヘッダーからトークン取得
     const authHeader = req.headers['authorization'];
     const token = extractTokenFromHeader(authHeader);
-    // 2. トークンの存在確認
     if(!token){
       return sendErrorResponse(res,HTTP_STATUS.UNAUTHORIZED,ERROR_MESSAGES.TOKEN_REQUIRED);
     }
-    // 3. JWT検証
     const decode = await verifyToken(token);
-    // 4. ユーザー情報をreq.userに設定
     if(!decode || !decode.userID){
       return sendErrorResponse(res,HTTP_STATUS.UNAUTHORIZED,ERROR_MESSAGES.TOKEN_INVALID);
     }
@@ -23,7 +19,6 @@ const authenticateToken = async (req,res, next) => {
       id: decode.userID,
       role: decode.role,
     };
-    // 5. next()でリクエスト継続
     next();
   }catch(error){
     sendErrorResponse(res,HTTP_STATUS.INTERNAL_SERVER_ERROR, ERROR_MESSAGES.INTERNAL_ERROR);
@@ -58,4 +53,10 @@ const extractTokenFromHeader = (authHeader) => {
 
   const token = authHeader.substring(7); // "Bearer " = 7文字
   return token.trim() || null;
+};
+
+module.exports = {
+  authenticateToken,
+  optionalAuth,
+  requireAdmin,
 };

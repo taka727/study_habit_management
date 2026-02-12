@@ -5,13 +5,7 @@ const logger = require('../utils/logger');
 const getAllTasks = async (req, res) => {
   logger.info('📋 getAllTasks: Starting to fetch all tasks');
   try {
-    const tasks = await prisma.task.findMany({
-      include: {
-        user: true,
-        status: true,
-        subtasks: true,
-      },
-    });
+    const tasks = await prisma.tasks.findMany();
     logger.info(`getAllTasks: Successfully fetched ${tasks.length} tasks`);
     logger.info('Tasks data:', JSON.stringify(tasks, null, 2));
     res.json({ status: 'success', data: tasks, count: tasks.length });
@@ -35,7 +29,7 @@ const getTaskById = async (req, res) => {
     }
 
     logger.info(`getTaskById: Searching for task with valid ID: ${id}`);
-    const task = await prisma.task.findUniqueOrThrow({
+    const task = await prisma.tasks.findUniqueOrThrow({
       where: { id: id },
     });
 
@@ -67,7 +61,6 @@ const createTask = async (req, res) => {
     const {
       taskTitle,
       taskDescription,
-      userId,
       taskStatusId,
       taskStartTime,
       taskEndTime,
@@ -82,19 +75,13 @@ const createTask = async (req, res) => {
       });
     }
 
-    const newTask = await prisma.task.create({
+    const newTask = await prisma.tasks.create({
       data: {
-        taskTitle,
-        taskDescription,
-        userId: userId || 1, // デフォルトユーザーID
-        taskStatusId: taskStatusId || 1, // デフォルトステータス
-        taskStartTime: taskStartTime ? new Date(taskStartTime) : new Date(),
-        taskEndTime: taskEndTime ? new Date(taskEndTime) : new Date(),
-      },
-      include: {
-        user: true,
-        status: true,
-        subtasks: true,
+        name: taskTitle,
+        description: taskDescription,
+        status : taskStatusId || 'TODO',
+        exec_expected_date: new Date(taskStartTime),
+        deadline: new Date(taskEndTime),
       },
     });
 
@@ -132,23 +119,18 @@ const updateTask = async (req, res) => {
     } = req.body;
 
     const updateData = {};
-    if (taskTitle !== undefined) updateData.taskTitle = taskTitle;
+    if (taskTitle !== undefined) updateData.name = taskTitle;
     if (taskDescription !== undefined)
-      updateData.taskDescription = taskDescription;
-    if (taskStatusId !== undefined) updateData.taskStatusId = taskStatusId;
+      updateData.description = taskDescription;
+    if (taskStatusId !== undefined) updateData.status = taskStatusId;
     if (taskStartTime !== undefined)
-      updateData.taskStartTime = new Date(taskStartTime);
+      updateData.exec_expected_date = new Date(taskStartTime);
     if (taskEndTime !== undefined)
-      updateData.taskEndTime = new Date(taskEndTime);
+      updateData.deadline = new Date(taskEndTime);
 
-    const updatedTask = await prisma.task.update({
+    const updatedTask = await prisma.tasks.update({
       where: { id: id },
       data: updateData,
-      include: {
-        user: true,
-        status: true,
-        subtasks: true,
-      },
     });
 
     logger.info(
@@ -187,7 +169,7 @@ const deleteTask = async (req, res) => {
         .json({ status: 'error', message: '無効なタスクID' });
     }
 
-    await prisma.task.delete({
+    await prisma.tasks.delete({
       where: { id: id },
     });
 
