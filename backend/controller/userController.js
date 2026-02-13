@@ -56,8 +56,8 @@ const updateUser = async (req, res) => {
 
     // 更新するデータを動的に作成
     const updateData = {};
-    if (name !== undefined && 0 < name && name <100) updateData.name = name;
-    if (login_name !== undefined && 3<login_name && login_name <255) updateData.login_name = login_name;
+    if (name !== undefined && name.length > 0 && name.length < 100) updateData.name = name;
+    if (login_name !== undefined && login_name.length >= 3 && login_name.length <= 255) updateData.login_name = login_name;
 
     logger.info(
       `updateUser: Updating user ID: ${userId} with data:`,
@@ -114,7 +114,7 @@ const deleteUser = async (req, res) => {
     const deletedUser = await prisma.users.update({
       where: {
         id: userId,
-        deleted_at: null,
+        deleateed_at: null,
       },
       data: {
         deleateed_at: new Date(),

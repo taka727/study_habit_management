@@ -26,13 +26,33 @@ const authenticateToken = async (req,res, next) => {
 };
 
 const optionalAuth = async (req,res, next)=>{
-  // トークンがあれば検証、なくてもエラーにしない
-  // 公開エンドポイントで「ログイン済みなら追加情報」を提供する場合
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = extractTokenFromHeader(authHeader);
+    if(!token){
+      return next();
+    }
+    const decode = await verifyToken(token);
+    if(decode && decode.userID){
+      req.user = {
+        id: decode.userID,
+        role: decode.role,
+      };
+    }
+    next();
+  } catch(error) {
+    next();
+  }
 };
 
 const requireAdmin = (req,res,next) =>{
-  // authenticateTokenの後に使用
-  // req.user.roleをチェック
+  if(!req.user){
+    return sendErrorResponse(res,HTTP_STATUS.UNAUTHORIZED,ERROR_MESSAGES.TOKEN_REQUIRED);
+  }
+  if(req.user.role !== 'admin'){
+    return sendErrorResponse(res,HTTP_STATUS.FORBIDDEN, 'admin権限が必要です');
+  }
+  next();
 };
 
 /**

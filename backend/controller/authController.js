@@ -19,7 +19,7 @@ const registerUser = async (req, res) => {
       });
     }
 
-    if (String.IsString(login_name)) {
+    if (typeof login_name !== 'string') {
       logger.info('registerUser: login_name not string.');
       return res.status(400).json({
         status: 'error',
@@ -42,9 +42,9 @@ const registerUser = async (req, res) => {
         message: 'セキュリティ回答は必須です',
       });
     }
-    if (Number.isInteger(security_question_id) && security_question_id > 0) {
+    if (!Number.isInteger(security_question_id) || security_question_id <= 0) {
       logger.error('registerUser: sequrity_questionid not Number.');
-      res.status(400).json({
+      return res.status(400).json({
         status: 'error',
         message: '秘密の質問IDは整数である必要があります。',
       });
@@ -152,7 +152,7 @@ const loginUser = async (req, res) => {
     const user = await prisma.users.findUnique({
       where: {
         login_name,
-        deleted_at: null,
+        deleateed_at: null,
       },
     });
 
