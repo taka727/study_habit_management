@@ -56,8 +56,8 @@ const updateUser = async (req, res) => {
 
     // 更新するデータを動的に作成
     const updateData = {};
-    if (name !== undefined && name.length > 0 && name.length < 100) updateData.name = name;
-    if (login_name !== undefined && login_name.length >= 3 && login_name.length <= 255) updateData.login_name = login_name;
+    if (typeof name === 'string' && name.length > 0 && name.length < 100) updateData.name = name;
+    if (typeof login_name === 'string' && login_name.length >= 3 && login_name.length <= 255) updateData.login_name = login_name;
 
     logger.info(
       `updateUser: Updating user ID: ${userId} with data:`,
