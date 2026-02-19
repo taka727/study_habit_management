@@ -73,3 +73,6 @@ mysql-init/
 claude.md
 *.md.tmp
 .claude
+
+# Weekly task management
+weekly-tasks/

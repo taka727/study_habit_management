@@ -23,7 +23,7 @@ const getAllBooks = async (req, res) => {
 
 const getBookById = async (req, res) => {
   const { id } = req.params;
-  const parsedId = parseInt(id);
+  const parsedId = Number(id);
   if(isNaN(parsedId) || parsedId <= 0){
     return res.status(400).json({
       message:'Invalid id format',

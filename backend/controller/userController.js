@@ -23,9 +23,7 @@ const getUser = async (req, res) => {
 
     if (!user) {
       logger.info(`getUser: User not found with ID: ${userId}`);
-      return res
-        .status(404)
-        .json({ status: 'error', message: 'ユーザが存在しません' });
+      return res.status(404).json({ status: 'error', message: 'ユーザが存在しません' });
     }
 
     logger.info(`getUser: Successfully fetched user with ID: ${userId}`);
@@ -46,7 +44,15 @@ const updateUser = async (req, res) => {
     const { name, login_name } = req.body;
 
     // バリデーション
-    if (!name && !login_name) {
+    if (!name) {
+      logger.info('updateUser: No fields to update');
+      return res.status(400).json({
+        status: 'error',
+        message: '更新する項目が指定されていません',
+      });
+    }
+
+    if (!login_name) {
       logger.info('updateUser: No fields to update');
       return res.status(400).json({
         status: 'error',
@@ -56,13 +62,17 @@ const updateUser = async (req, res) => {
 
     // 更新するデータを動的に作成
     const updateData = {};
-    if (name !== undefined && name.length > 0 && name.length < 100) updateData.name = name;
-    if (login_name !== undefined && login_name.length >= 3 && login_name.length <= 255) updateData.login_name = login_name;
+    if (name !== undefined && typeof name === 'string' && name.length > 0 && name.length < 100)
+      updateData.name = name;
+    if (
+      login_name !== undefined &&
+      typeof login_name === 'string' &&
+      login_name.length >= 3 &&
+      login_name.length <= 255
+    )
+      updateData.login_name = login_name;
 
-    logger.info(
-      `updateUser: Updating user ID: ${userId} with data:`,
-      updateData,
-    );
+    logger.info(`updateUser: Updating user ID: ${userId} with data:`, updateData);
 
     const updatedUser = await prisma.users.update({
       where: { id: userId },
@@ -127,9 +137,7 @@ const deleteUser = async (req, res) => {
       },
     });
 
-    logger.info(
-      `deleteUser: Successfully soft-deleted user with ID: ${userId}`,
-    );
+    logger.info(`deleteUser: Successfully soft-deleted user with ID: ${userId}`);
     res.status(200).json({
       status: 'success',
       message: 'ユーザを削除しました',

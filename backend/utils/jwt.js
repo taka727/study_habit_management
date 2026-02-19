@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const logger = require('../utils/logger');
 
 // 環境変数の設定（文字列として取得）
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.BACKEND_JWT_SECRET;
 if(!JWT_SECRET){
   throw new Error('JWT_SECRET enviroment variable is required.');
 }

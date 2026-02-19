@@ -12,12 +12,12 @@ const authenticateToken = async (req,res, next) => {
       return sendErrorResponse(res,HTTP_STATUS.UNAUTHORIZED,ERROR_MESSAGES.TOKEN_REQUIRED);
     }
     const decode = await verifyToken(token);
-    if(!decode || !decode.userID){
+    if(!decode || !decode.id){
       return sendErrorResponse(res,HTTP_STATUS.UNAUTHORIZED,ERROR_MESSAGES.TOKEN_INVALID);
     }
     req.user = {
-      id: decode.userID,
-      role: decode.role,
+      id: decode.id,
+      login_name: decode.login_name,
     };
     next();
   }catch(error){
@@ -33,10 +33,10 @@ const optionalAuth = async (req,res, next)=>{
       return next();
     }
     const decode = await verifyToken(token);
-    if(decode && decode.userID){
+    if(decode && decode.id){
       req.user = {
-        id: decode.userID,
-        role: decode.role,
+        id: decode.id,
+        login_name: decode.login_name,
       };
     }
     next();
