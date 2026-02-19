@@ -17,7 +17,7 @@ router.post('/', authenticateToken, createHistory);
 router.get('/:historyId', authenticateToken, getHistory);
 router.put('/:historyId', authenticateToken, updateHistory);
 router.delete('/:historyId', authenticateToken, deleteHistory);
-router.post('/', authenticateToken, startStudyHistory);
-router.put('/:historyId', authenticateToken, endStudyHistory);
+router.post('/start', authenticateToken, startStudyHistory);
+router.put('/:historyId/end', authenticateToken, endStudyHistory);
 
 module.exports = router;

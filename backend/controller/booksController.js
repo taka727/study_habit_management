@@ -23,7 +23,8 @@ const getAllBooks = async (req, res) => {
 
 const getBookById = async (req, res) => {
   const { id } = req.params;
-  if(!Number.isInteger(id)){
+  const parsedId = Number(id);
+  if(isNaN(parsedId) || parsedId <= 0){
     return res.status(400).json({
       message:'Invalid id format',
     });
@@ -95,7 +96,7 @@ const updateBook = async (req, res) => {
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'p2025'
+      error.code === 'P2025'
     ) {
       res.status(404).json({
         status: 'error',
@@ -107,7 +108,6 @@ const updateBook = async (req, res) => {
         message: 'サーバーエラー：' + error.message,
       });
     }
-    throw error;
   }
 };
 
@@ -126,7 +126,7 @@ const deleteBook = async (req, res) => {
   }catch(error){
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'p2025'
+      error.code === 'P2025'
     ) {
       res.status(404).json({
         status: 'error',
@@ -138,7 +138,6 @@ const deleteBook = async (req, res) => {
         message: 'サーバーエラー：' + error.message,
       });
     }
-    throw error;
   }
 };
 
