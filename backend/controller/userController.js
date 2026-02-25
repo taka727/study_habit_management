@@ -160,8 +160,13 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getUserSettings = async (req, res) => {};
+const updateUserSettings = async (req, res) => {};
+
 module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  getUserSettings,
+  updateUserSettings,
 };
