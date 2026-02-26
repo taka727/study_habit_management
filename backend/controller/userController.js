@@ -160,8 +160,17 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getUserSettings = async (req, res) => {
+  res.sendStatus(501);
+};
+const updateUserSettings = async (req, res) => {
+  res.sendStatus(501);
+};
+
 module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  getUserSettings,
+  updateUserSettings,
 };

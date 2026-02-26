@@ -21,12 +21,16 @@ enum Status {
 }
 
 model users {
-  id           Int       @id @default(autoincrement())
-  name         String
-  login_name   String    @unique @db.VarChar(255)
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @updatedAt
-  deleateed_at DateTime?
+  id                 Int       @id @default(autoincrement())
+  name               String
+  notification_onoff Boolean   @default(true)
+  daily_goal_minutes Int       @default(120)
+  language           String?   @default("ja") @db.VarChar(255)
+  theme              String?   @default("light") @db.VarChar(255)
+  login_name         String    @unique @db.VarChar(255)
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  deleateed_at       DateTime?
 }
 
 model security_questions {
@@ -41,7 +45,7 @@ model security_questions {
 
 model security_question_answers {
   id           Int       @id @default(autoincrement())
-  question_id  Int       
+  question_id  Int
   user_id      Int       @unique
   answer_salt  String    @db.VarChar(255)
   answer_hash  String    @db.VarChar(255)
@@ -54,12 +58,17 @@ model security_question_answers {
 
 model tasks {
   id                 Int       @id @default(autoincrement())
+  user_id            Int?
   parent_task_id     Int?
   name               String    @db.VarChar(50)
   description        String?   @db.VarChar(1000)
+  schedule_date      DateTime?
   exec_expected_date DateTime?
   deadline           DateTime?
   status             Status    @default(TODO)
+  duration_seconds   Int?
+  category           String?   @db.VarChar(255)
+  comment            String?   @db.VarChar(1000)
   created_at         DateTime  @default(now())
   updated_at         DateTime  @updatedAt
   deleateed_at       DateTime?
@@ -72,7 +81,8 @@ model tasks {
 
 model study_histories {
   id               Int       @id @default(autoincrement())
-  task_id          Int?      
+  user_id          Int?
+  task_id          Int?
   description      String?   @db.VarChar(1000)
   occurreed_on     DateTime
   started_at       DateTime?
@@ -89,8 +99,10 @@ model study_histories {
 
 model goals {
   id            Int       @id @default(autoincrement())
+  user_id       Int?
   name          String    @db.VarChar(100)
   description   String?   @db.VarChar(1000)
+  progress      Int       @default(0)
   goal_deadline DateTime
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
@@ -114,10 +126,20 @@ model task_goals {
 }
 
 model book_managements {
-  id           Int       @id @default(autoincrement())
-  title        String    @db.VarChar(255)
-  desicription String?   @db.VarChar(1000)
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @updatedAt
+  id           Int        @id @default(autoincrement())
+  user_id      Int?
+  title        String     @db.VarChar(255)
+  desicription String?    @db.VarChar(1000)
+  author       String?    @db.VarChar(255)
+  status       BookStatus @default(TODO)
+  rating       Int?
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
   deleateed_at DateTime?
+}
+
+enum BookStatus {
+  TODO
+  READING
+  COMPLETED
 }
