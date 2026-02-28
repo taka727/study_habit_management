@@ -18,7 +18,7 @@ const getAllHistories = async (req, res) => {
           gte:fromDate,
           lte:toDate,
         },
-        deleateed_at:null,
+        deleted_at:null,
       },
     });
     logger.info(histories);
@@ -32,13 +32,13 @@ const getAllHistories = async (req, res) => {
 
 const createHistory = async (req, res) => {
   logger.info('start createHistory');
-  const {task_id, description,occurreed_on,started_at,ended_at} = req.body;
+  const {task_id, description,occurred_on,started_at,ended_at} = req.body;
   try {
     const newHistory = await prisma.study_histories.create({
       data:{
         task_id,
         description,
-        occurreed_on,
+        occurred_on,
         started_at,
         ended_at,
       },
@@ -70,7 +70,7 @@ const getHistory = async (req, res) => {
 const updateHistory = async (req, res) => {
   logger.info('start updateHistory');
   const { id } = req.params;
-  const {task_id, description,occurreed_on,started_at,ended_at} = req.body;
+  const {task_id, description,occurred_on,started_at,ended_at} = req.body;
 
   try {
     const updatedHistory = await prisma.study_histories.update({
@@ -80,7 +80,7 @@ const updateHistory = async (req, res) => {
       data:{
         task_id,
         description,
-        occurreed_on,
+        occurred_on,
         started_at,
         ended_at,
       },
@@ -110,13 +110,13 @@ const deleteHistory = async (req, res) => {
 };
 const startStudyHistory = async (req, res) => {
   logger.info('start startStudyHistory');
-  const { task_id, description, occurreed_on } = req.body;
+  const { task_id, description, occurred_on } = req.body;
   try {
     const newHistory = await prisma.study_histories.create({
       data:{
         task_id,
         description,
-        occurreed_on,
+        occurred_on,
         started_at: new Date(),
         ended_at: null,
       },

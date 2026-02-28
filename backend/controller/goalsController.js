@@ -7,7 +7,7 @@ const getAllGoals = async (req, res) => {
     logger.info('start');
     const Goal = await prisma.goals.findMany({
       where: {
-        deleateed_at: null,
+        deleted_at: null,
       },
       select: {
         id: true,
@@ -32,7 +32,7 @@ const getGoalById = async (req, res) => {
     const Goal = await prisma.goals.findUnique({
       where: {
         id: parseInt(id),
-        deleateed_at: null,
+        deleted_at: null,
       },
       select: {
         id: true,
@@ -102,7 +102,7 @@ const deleteGoal = async (req, res) => {
     const Goal = await prisma.goals.update({
       where: { id: parseInt(id) },
       data: {
-        deleateed_at: new Date(),
+        deleted_at: new Date(),
       },
     });
     logger.info(Goal);

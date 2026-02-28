@@ -152,7 +152,7 @@ const loginUser = async (req, res) => {
     const user = await prisma.users.findUnique({
       where: {
         login_name,
-        deleateed_at: null,
+        deleted_at: null,
       },
     });
 
@@ -224,7 +224,7 @@ const getSecurityQuestion = async (req, res) => {
     // 削除されていないセキュリティ質問を全て取得
     const questions = await prisma.security_questions.findMany({
       where: {
-        deleateed_at: null,
+        deleted_at: null,
       },
       select: {
         id: true,
