@@ -30,7 +30,7 @@ model users {
   login_name         String    @unique @db.VarChar(255)
   created_at         DateTime  @default(now())
   updated_at         DateTime  @updatedAt
-  deleateed_at       DateTime?
+  deleted_at         DateTime?
 }
 
 model security_questions {
@@ -38,7 +38,7 @@ model security_questions {
   question     String    @db.VarChar(255)
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
-  deleateed_at DateTime?
+  deleted_at   DateTime?
 
   security_question_answers security_question_answers[]
 }
@@ -51,7 +51,7 @@ model security_question_answers {
   answer_hash  String    @db.VarChar(255)
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
-  deleateed_at DateTime?
+  deleted_at   DateTime?
 
   questions security_questions @relation(fields: [question_id], references: [id], onDelete: Cascade)
 }
@@ -71,7 +71,7 @@ model tasks {
   comment            String?   @db.VarChar(1000)
   created_at         DateTime  @default(now())
   updated_at         DateTime  @updatedAt
-  deleateed_at       DateTime?
+  deleted_at         DateTime?
 
   history    study_histories[]
   task_goals task_goals[]
@@ -84,17 +84,17 @@ model study_histories {
   user_id          Int?
   task_id          Int?
   description      String?   @db.VarChar(1000)
-  occurreed_on     DateTime
+  occurred_on      DateTime
   started_at       DateTime?
   ended_at         DateTime?
   duration_seconds Int?
   created_at       DateTime  @default(now())
   updated_at       DateTime  @updatedAt
-  deleateed_at     DateTime?
+  deleted_at       DateTime?
 
   task tasks? @relation(fields: [task_id], references: [id], onDelete: SetNull)
 
-  @@index([occurreed_on])
+  @@index([occurred_on])
 }
 
 model goals {
@@ -106,7 +106,7 @@ model goals {
   goal_deadline DateTime
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
-  deleateed_at  DateTime?
+  deleted_at    DateTime?
 
   task_goals task_goals[]
 
@@ -119,7 +119,7 @@ model task_goals {
   task_id      Int
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
-  deleateed_at DateTime?
+  deleted_at   DateTime?
 
   goal goals @relation(fields: [goal_id], references: [id], onDelete: Cascade)
   task tasks @relation(fields: [task_id], references: [id], onDelete: Cascade)
@@ -129,13 +129,13 @@ model book_managements {
   id           Int        @id @default(autoincrement())
   user_id      Int?
   title        String     @db.VarChar(255)
-  desicription String?    @db.VarChar(1000)
+  description  String?    @db.VarChar(1000)
   author       String?    @db.VarChar(255)
   status       BookStatus @default(TODO)
   rating       Int?
   created_at   DateTime   @default(now())
   updated_at   DateTime   @updatedAt
-  deleateed_at DateTime?
+  deleted_at   DateTime?
 }
 
 enum BookStatus {

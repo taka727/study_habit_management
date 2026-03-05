@@ -202,19 +202,19 @@ async function main() {
     data: [
       {
         title: '参考書１',
-        desicription: '参考書の内容１',
+        description: '参考書の内容１',
       },
       {
         title: '参考書２',
-        desicription: '参考書の説明２',
+        description: '参考書の説明２',
       },
       {
         title: '参考書３',
-        desicription: '参考書の内容３',
+        description: '参考書の内容３',
       },
       {
         title: '参考書４',
-        desicription: '参考書の説明４',
+        description: '参考書の説明４',
       },
     ],
   });
@@ -227,7 +227,7 @@ async function main() {
       {
         task_id: task1.id,
         description: '今日の勉強の結果',
-        occurreed_on: new Date(),
+        occurred_on: new Date(),
         started_at: start_at,
         ended_at: end_at,
         duration_seconds: Math.floor((end_at - start_at) / 1000),
@@ -235,7 +235,7 @@ async function main() {
       {
         task_id: task2.id,
         description: '今日の作業の結果',
-        occurreed_on: new Date(),
+        occurred_on: new Date(),
         started_at: start_at,
         ended_at: end_at,
         duration_seconds: Math.floor((end_at - start_at) / 1000),
@@ -243,7 +243,7 @@ async function main() {
       {
         task_id: task5.id,
         description: '今日の勉強の結果',
-        occurreed_on: new Date(),
+        occurred_on: new Date(),
         started_at: start_at,
         ended_at: end_at,
         duration_seconds: Math.floor((end_at - start_at) / 1000),
@@ -251,7 +251,7 @@ async function main() {
       {
         task_id: task6.id,
         description: '今日の作業の結果',
-        occurreed_on: new Date(),
+        occurred_on: new Date(),
         started_at: start_at,
         ended_at: end_at,
         duration_seconds: Math.floor((end_at - start_at) / 1000),

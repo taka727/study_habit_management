@@ -9,7 +9,7 @@ const getAllBooks = async (req, res) => {
       select: {
         id: true,
         title: true,
-        desicription: true,
+        description: true,
       },
     });
     logger.info(book);
@@ -35,7 +35,7 @@ const getBookById = async (req, res) => {
       select: {
         id: true,
         title: true,
-        desicription: true,
+        description: true,
       },
     });
     if (!book) {
@@ -53,7 +53,7 @@ const getBookById = async (req, res) => {
 };
 
 const createBook = async (req, res) => {
-  const { title , desicription} = req.body;
+  const { title , description} = req.body;
   try {
     if(title === undefined || title === null){
       return res.status(400).json({
@@ -61,12 +61,12 @@ const createBook = async (req, res) => {
       });
     }
     logger.info('title：' + title);
-    logger.info('desicription：' + desicription);
+    logger.info('description：' + description);
 
     const book = await prisma.book_managements.create({
       data: {
         title: title,
-        desicription: desicription,
+        description: description,
       },
     });
     logger.info(book);
@@ -80,15 +80,15 @@ const createBook = async (req, res) => {
 
 const updateBook = async (req, res) => {
   const { id } = req.params;
-  const { title, desicription } = req.body;
+  const { title, description } = req.body;
   try {
     logger.info('title：' + title);
-    logger.info('desicription：' + desicription);
+    logger.info('description：' + description);
     const book = await prisma.book_managements.update({
       where: { id: parseInt(id) },
       data: {
         title: title,
-        desicription: desicription,
+        description: description,
       },
     });
     logger.info(book);
@@ -118,7 +118,7 @@ const deleteBook = async (req, res) => {
     const book = await prisma.book_managements.update({
       where: { id: parseInt(id) },
       data: {
-        deleateed_at: new Date(),
+        deleted_at: new Date(),
       },
     });
     logger.info(book);
