@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - echo Installing source NPM dependencies...
+      - cd backend
+      - npm install
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the application...
+      - npm run build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - cp package.json dist/
+      - cp package-lock.json dist/
+
+artifacts:
+  files:
+    - backend/dist/**/*
+    - backend/package.json
+    - appspec.yml
+  discard-paths: yes
