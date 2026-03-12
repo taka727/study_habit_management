@@ -29,7 +29,7 @@ const getGoalById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const Goal = await prisma.goals.findUnique({
+    const Goal = await prisma.goals.findFirst({
       where: {
         id: parseInt(id),
         deleted_at: null,

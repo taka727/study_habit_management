@@ -101,7 +101,7 @@ const deleteHistory = async (req, res) => {
         id:parseInt(id),
       },
       data:{
-        ended_at:toDate()
+        deleted_at: new Date(),
       }
     });
     res.status(200).json({status:'success',data:deletedHistory});

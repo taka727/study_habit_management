@@ -149,7 +149,7 @@ const loginUser = async (req, res) => {
     }
 
     // ユーザーの存在確認
-    const user = await prisma.users.findUnique({
+    const user = await prisma.users.findFirst({
       where: {
         login_name,
         deleted_at: null,
