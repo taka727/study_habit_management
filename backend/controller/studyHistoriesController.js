@@ -96,10 +96,13 @@ const deleteHistory = async (req, res) => {
   const { id } = req.params;
   logger.info('start deleteHistory');
   try {
-    const deletedHistory = await prisma.study_histories.delete({
+    const deletedHistory = await prisma.study_histories.update({
       where:{
         id:parseInt(id),
       },
+      data:{
+        ended_at:toDate()
+      }
     });
     res.status(200).json({status:'success',data:deletedHistory});
   } catch (error) {
