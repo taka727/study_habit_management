@@ -120,15 +120,19 @@ const deleteUser = async (req, res) => {
 
     logger.info(`deleteUser: Attempting to delete user with ID: ${userId}`);
 
-    // ソフトデリートの実装
-    const deletedUser = await prisma.users.update({
-      where: {
-        id: userId,
-        deleted_at: null,
-      },
-      data: {
-        deleted_at: new Date(),
-      },
+    // ソフトデリートの実装 (アトミックに削除済みでないユーザのみ更新)
+    const result = await prisma.users.updateMany({
+      where: { id: userId, deleted_at: null },
+      data: { deleted_at: new Date() },
+    });
+
+    if (result.count === 0) {
+      logger.info(`deleteUser: User not found or already deleted: ${userId}`);
+      return res.status(404).json({ status: 'error', message: 'ユーザが存在しません' });
+    }
+
+    const deletedUser = await prisma.users.findUnique({
+      where: { id: userId },
       select: {
         id: true,
         name: true,
