@@ -53,11 +53,15 @@ const createHistory = async (req, res) => {
 const getHistory = async (req, res) => {
   logger.info('start getHistory');
   const { id } = req.params;
+  const parsedId = Number(id);
+  if (!Number.isInteger(parsedId) || parsedId <= 0) {
+    return res.status(400).json({status:'error',message:'Invalid id format'});
+  }
 
   try {
     const history = await prisma.study_histories.findFirst({
       where:{
-        id:parseInt(id),
+        id:parsedId,
         deleted_at:null,
       },
     });
