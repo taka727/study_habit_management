@@ -100,17 +100,24 @@ const deleteHistory = async (req, res) => {
   const { id } = req.params;
   logger.info('start deleteHistory');
   try {
-    const deletedHistory = await prisma.study_histories.update({
+    const result = await prisma.study_histories.updateMany({
       where:{
         id:parseInt(id),
+        deleted_at:null,
       },
       data:{
         deleted_at: new Date(),
-      }
+      },
     });
-    res.status(200).json({status:'success',data:deletedHistory});
+    if (result.count === 0) {
+      return res.status(404).json({status:'error',message:'履歴が存在しません'});
+    }
+    res.status(200).json({status:'success'});
   } catch (error) {
-    res.status(500).json({status:'error',message:error.message});
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      return res.status(404).json({status:'error',message:'履歴が存在しません'});
+    }
+    res.status(500).json({status:'error',message:'サーバーエラー'});
   } finally {
     logger.info('end deleteHistory');
   }
