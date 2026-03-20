@@ -55,11 +55,15 @@ const getHistory = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const history = await prisma.study_histories.findUnique({
+    const history = await prisma.study_histories.findFirst({
       where:{
         id:parseInt(id),
+        deleted_at:null,
       },
     });
+    if (!history) {
+      return res.status(404).json({status:'error',message:'履歴が存在しません'});
+    }
     res.status(200).json({status:'success',data:history});
   } catch (error) {
     res.status(500).json({status:'error',message:error.message});
