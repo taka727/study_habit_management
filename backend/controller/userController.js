@@ -1,13 +1,21 @@
+const { validationResult } = require('express-validator');
 const prisma = require('../prismaClient');
 const logger = require('../utils/logger');
 const { Prisma } = require('@prisma/client');
 
 const getUser = async (req, res) => {
   logger.info('start getUser');
+  const error = validationResult(req);
+
+  if (!error.isEmpty()) {
+    return res.status(400).json({ status: 'error', message: error.array() });
+  }
+
   try {
     const user = await prisma.users.findUnique({
       where: {
         id: req.user?.id,
+        deleted_at: null,
       },
       select: {
         id: true,
@@ -35,6 +43,12 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   logger.info('start updateUser');
+  const error = validationResult(req);
+
+  if (!error.isEmpty()) {
+    return res.status(400).json({ status: 'error', message: error.array() });
+  }
+
   try {
     const { name, login_name } = req.body;
 
@@ -107,6 +121,12 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   logger.info('start deleteUser');
+  const error = validationResult(req);
+
+  if (!error.isEmpty()) {
+    return res.status(400).json({ status: 'error', message: error.array() });
+  }
+
   try {
     logger.info(`deleteUser: Attempting to delete user with ID: ${req.user?.id}`);
 
