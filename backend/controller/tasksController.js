@@ -16,7 +16,7 @@ const getAllTasks = async (req, res) => {
 };
 
 const getTaskById = async (req, res) => {
-  const { taskId } = req.params;
+  const taskId = req.params.id;
   logger.info(`🔍 getTaskById: Fetching task with ID: ${taskId}`);
 
   try {
@@ -97,7 +97,7 @@ const createTask = async (req, res) => {
 };
 
 const updateTask = async (req, res) => {
-  const { taskId } = req.params;
+  const taskId = req.params.id;
   logger.info(`updateTask: Starting to update task with ID: ${taskId}`);
   logger.info('Request body:', JSON.stringify(req.body, null, 2));
 
@@ -157,7 +157,7 @@ const updateTask = async (req, res) => {
 };
 
 const deleteTask = async (req, res) => {
-  const { taskId } = req.params;
+  const taskId = req.params.id;
   logger.info(`deleteTask: Starting to delete task with ID: ${taskId}`);
 
   try {

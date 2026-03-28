@@ -5,9 +5,9 @@ const { getAllTasks, getTaskById, createTask, updateTask, deleteTask } = require
 const router = express.Router();
 
 router.get('/', authenticateToken, getAllTasks);
-router.get('/:taskId', authenticateToken, getTaskById);
+router.get('/:id', authenticateToken, getTaskById);
 router.post('/', authenticateToken, createTask);
-router.put('/:taskId', authenticateToken, updateTask);
-router.delete('/:taskId', authenticateToken, deleteTask);
+router.put('/:id', authenticateToken, updateTask);
+router.delete('/:id', authenticateToken, deleteTask);
 
 module.exports = router;
