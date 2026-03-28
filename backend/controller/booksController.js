@@ -17,7 +17,7 @@ const getAllBooks = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
+      .json({ status: 'error', message: 'サーバーエラー' });
   }
 };
 
@@ -48,7 +48,7 @@ const getBookById = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
+      .json({ status: 'error', message: 'サーバーエラー' });
   }
 };
 
@@ -74,7 +74,7 @@ const createBook = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
+      .json({ status: 'error', message: 'サーバーエラー' });
   }
 };
 
