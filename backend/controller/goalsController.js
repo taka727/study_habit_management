@@ -110,7 +110,7 @@ const deleteGoal = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: 'error',
-      message: 'サーバーエラー：' + error.message,
+      message: 'サーバーエラー',
     });
   }
 };

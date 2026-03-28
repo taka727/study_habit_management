@@ -5,16 +5,11 @@ const { Prisma } = require('@prisma/client');
 
 const getUser = async (req, res) => {
   logger.info('start getUser');
-  const error = validationResult(req);
-
-  if (!error.isEmpty()) {
-    return res.status(400).json({ status: 'error', message: error.array() });
-  }
 
   try {
     const user = await prisma.users.findUnique({
       where: {
-        id: req.user?.id,
+        id: req.user.id,
         deleted_at: null,
       },
       select: {
@@ -43,12 +38,6 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   logger.info('start updateUser');
-  const error = validationResult(req);
-
-  if (!error.isEmpty()) {
-    return res.status(400).json({ status: 'error', message: error.array() });
-  }
-
   try {
     const { name, login_name } = req.body;
 
@@ -79,10 +68,10 @@ const updateUser = async (req, res) => {
     )
       updateData.login_name = login_name;
 
-    logger.info(`updateUser: Updating user ID: ${req.user?.id} with data:`, updateData);
+    logger.info(`updateUser: Updating user ID: ${req.user.id} with data:`, updateData);
 
     const updatedUser = await prisma.users.update({
-      where: { id: req.user?.id },
+      where: { id: req.user.id },
       data: updateData,
       select: {
         id: true,
@@ -121,17 +110,11 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   logger.info('start deleteUser');
-  const error = validationResult(req);
-
-  if (!error.isEmpty()) {
-    return res.status(400).json({ status: 'error', message: error.array() });
-  }
-
   try {
-    logger.info(`deleteUser: Attempting to delete user with ID: ${req.user?.id}`);
+    logger.info(`deleteUser: Attempting to delete user with ID: ${req.user.id}`);
 
     const result = await prisma.users.updateMany({
-      where: { id: req.user?.id, deleted_at: null },
+      where: { id: req.user.id, deleted_at: null },
       data: { deleted_at: new Date() },
     });
 
@@ -150,7 +133,7 @@ const deleteUser = async (req, res) => {
       },
     });
 
-    logger.info(`deleteUser: Successfully soft-deleted user with ID: ${req.user?.id}`);
+    logger.info(`deleteUser: Successfully soft-deleted user with ID: ${req.user.id}`);
     res.status(200).json({
       status: 'success',
       message: 'ユーザを削除しました',

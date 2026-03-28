@@ -105,7 +105,7 @@ const updateBook = async (req, res) => {
     } else {
       res.status(500).json({
         status: 'error',
-        message: 'サーバーエラー：' + error.message,
+        message: 'サーバーエラー',
       });
     }
   }
@@ -135,7 +135,7 @@ const deleteBook = async (req, res) => {
     } else {
       res.status(500).json({
         status: 'error',
-        message: 'サーバーエラー：' + error.message,
+        message: 'サーバーエラー',
       });
     }
   }

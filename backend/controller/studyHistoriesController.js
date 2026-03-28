@@ -25,7 +25,7 @@ const getAllHistories = async (req, res) => {
     logger.info(histories);
     res.status(200).json({ status: 'success', data: histories });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
     logger.info('end getALLHistories');
   }
@@ -50,7 +50,7 @@ const createHistory = async (req, res) => {
     });
     res.status(201).json({ status: 'success', data: newHistory });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
     logger.info('end createHistory');
   }
@@ -76,7 +76,7 @@ const getHistory = async (req, res) => {
     }
     res.status(200).json({ status: 'success', data: history });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
     logger.info('end getHistory');
   }
@@ -106,7 +106,7 @@ const updateHistory = async (req, res) => {
     });
     res.status(200).json({ status: 'success', data: updatedHistory });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
     logger.info('end updateHistory');
   }
@@ -158,7 +158,7 @@ const startStudyHistory = async (req, res) => {
     });
     res.status(201).json({ status: 'success', data: newHistory });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
     logger.info('end startStudyHistory');
   }
@@ -178,7 +178,7 @@ const endStudyHistory = async (req, res) => {
     });
     res.status(200).json({ status: 'success', data: endedHistory });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
     logger.info('end endStudyHistory');
   }

@@ -25,9 +25,9 @@ const createHistoryInputRules = [
 router.get('/', authenticateToken, getAllHistories);
 router.post('/', authenticateToken, createHistoryInputRules, createHistory);
 router.get('/:id', authenticateToken, getHistory);
-router.put('/:id', authenticateToken, updateHistory);
+router.put('/:id', authenticateToken, createHistoryInputRules ,updateHistory);
 router.delete('/:id', authenticateToken, deleteHistory);
-router.post('/start', authenticateToken, startStudyHistory);
+router.post('/start', authenticateToken, createHistoryInputRules ,startStudyHistory);
 router.put('/:id/end', authenticateToken, endStudyHistory);
 
 module.exports = router;
