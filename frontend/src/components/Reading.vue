@@ -50,4 +50,4 @@ function addBook() {
   </div>
 </template>
 
-<style scoped src="../assets/css/reading.css" />
+<style scoped src="../assets/css/reading.css" ></style>

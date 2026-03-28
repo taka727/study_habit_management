@@ -19,7 +19,8 @@ const milestones = ref([
       <ul>
         <li class="home"><router-link to="/" @click="setActive('home')">HOME</router-link></li>
         <li class="history"><router-link to="/history" @click="setActive('history')">ヒストリー</router-link></li>
-        <li class="milestone"><router-link to="/milestone" class="active" @click="setActive('milestone')">マイルストーン</router-link></li>
+        <li class="milestone"><router-link to="/milestone" class="active"
+            @click="setActive('milestone')">マイルストーン</router-link></li>
         <li class="reading"><router-link to="/reading" @click="setActive('reading')">読書記録</router-link></li>
         <li class="settings"><router-link to="/settings" @click="setActive('settings')">設定</router-link></li>
       </ul>
@@ -42,4 +43,4 @@ const milestones = ref([
   </div>
 </template>
 
-<style scoped src="../assets/css/milestone.css" />
+<style scoped src="../assets/css/milestone.css" ></style>

@@ -73,4 +73,4 @@ function saveSettings() {
   </div>
 </template>
 
-<style scoped src="../assets/css/settings.css" />
+<style scoped src="../assets/css/settings.css" ></style>
