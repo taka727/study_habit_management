@@ -1,13 +1,13 @@
 @import './base.css';
 
 .reading-container {
-  max-width: 1400px;
+  max-width: var(--app-max-width);
   margin: 0 auto;
   padding: 20px;
 }
 
 .add-book-btn {
-  background: #4CAF50;
+  background: var(--app-color-primary);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -25,8 +25,8 @@
 .book-card {
   background: white;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: var(--app-border-radius-md);
+  box-shadow: var(--app-shadow-card);
 }
 
 .book-header {
@@ -44,22 +44,22 @@
 }
 
 .status-badge.読了 {
-  background: #4CAF50;
+  background: var(--app-color-primary);
   color: white;
 }
 
 .status-badge.読書中 {
-  background: #FF9800;
+  background: var(--app-color-warning);
   color: white;
 }
 
 .status-badge.予定 {
-  background: #9E9E9E;
+  background: var(--app-color-neutral);
   color: white;
 }
 
 .author {
-  color: #666;
+  color: var(--app-text-secondary);
   margin-bottom: 10px;
 }
 
@@ -77,10 +77,10 @@
 
 .notes h4 {
   margin: 10px 0 5px 0;
-  color: #333;
+  color: var(--app-text-primary);
 }
 
 .notes p {
-  color: #666;
+  color: var(--app-text-secondary);
   font-size: 14px;
 }

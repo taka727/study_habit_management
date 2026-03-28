@@ -1,5 +1,7 @@
+@import './base.css';
+
 .history-container {
-  max-width: 1400px;
+  max-width: var(--app-max-width);
   margin: 0 auto;
   padding: 30px 20px;
 }
@@ -7,9 +9,9 @@
 .week-history {
   margin-bottom: 20px;
   border: 1px solid #ddd;
-  border-radius: 12px;
+  border-radius: var(--app-border-radius-lg);
   padding: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--app-shadow-card);
 }
 
 .week-header {
@@ -21,12 +23,12 @@
 .week-title {
   font-size: 1.2em;
   font-weight: bold;
-  color: #333;
+  color: var(--app-text-primary);
 }
 
 .week-header h3 {
   margin: 0;
-  color: #333;
+  color: var(--app-text-primary);
   font-size: 1.5em;
 }
 
@@ -39,15 +41,15 @@
 }
 
 .achievement-badge.high {
-  background: linear-gradient(45deg, #4CAF50, #45a049);
+  background: linear-gradient(45deg, var(--app-color-primary), var(--app-color-primary-dark));
 }
 
 .achievement-badge.medium {
-  background: linear-gradient(45deg, #FF9800, #f57c00);
+  background: linear-gradient(45deg, var(--app-color-warning), var(--app-color-warning-dark));
 }
 
 .achievement-badge.low {
-  background: linear-gradient(45deg, #f44336, #d32f2f);
+  background: linear-gradient(45deg, var(--app-color-danger), var(--app-color-danger-dark));
 }
 
 .charts-container {
@@ -60,7 +62,7 @@
 .chart-section h4 {
   margin-top: 0;
   margin-bottom: 15px;
-  color: #555;
+  color: var(--app-text-muted);
   font-size: 1.1em;
 }
 
@@ -68,7 +70,7 @@
   position: relative;
   height: 300px;
   background: white;
-  border-radius: 8px;
+  border-radius: var(--app-border-radius-md);
   border: 1px solid #e0e0e0;
   padding: 20px;
 }
@@ -85,13 +87,13 @@
 .percentage {
   font-size: 24px;
   font-weight: bold;
-  color: #4CAF50;
+  color: var(--app-color-primary);
   line-height: 1;
 }
 
 .label {
   font-size: 12px;
-  color: #666;
+  color: var(--app-text-secondary);
   margin-top: 5px;
 }
 
@@ -108,14 +110,14 @@
 .stat-label {
   display: block;
   font-size: 12px;
-  color: #666;
+  color: var(--app-text-secondary);
   margin-bottom: 4px;
 }
 
 .stat-value {
   font-weight: bold;
   font-size: 16px;
-  color: #333;
+  color: var(--app-text-primary);
 }
 
 .day-grid {
@@ -128,25 +130,25 @@
 .day-summary {
   padding: 15px;
   background: #f9f9f9;
-  border-radius: 8px;
+  border-radius: var(--app-border-radius-md);
   border: 1px solid #e0e0e0;
 }
 
 .day-summary h5 {
   margin: 0 0 10px 0;
-  color: #333;
+  color: var(--app-text-primary);
   font-size: 14px;
 }
 
 .stats p {
   margin: 5px 0;
   font-size: 13px;
-  color: #666;
+  color: var(--app-text-secondary);
 }
 
 .achievement-rate {
   font-weight: bold;
-  color: #4CAF50;
+  color: var(--app-color-primary);
 }
 
 /* レスポンシブ対応 */
