@@ -12,7 +12,7 @@ const {
 
 const router = express.Router();
 
-const { body, param, validationResult } = require('express-validator');
+const { body, param, validationResult, query } = require('express-validator');
 
 const createHistoryInputRules = [
   body('occurred_on')
@@ -22,7 +22,12 @@ const createHistoryInputRules = [
     .withMessage('日付の形式が間違っています。(YYYY-MM-DD)'),
 ];
 
-router.get('/', authenticateToken, getAllHistories);
+const getHistoryInputRules = [
+  query('from')
+    .optional().isISO8601(),
+];
+
+router.get('/', authenticateToken, getHistoryInputRules , getAllHistories);
 router.post('/', authenticateToken, createHistoryInputRules, createHistory);
 router.get('/:id', authenticateToken, getHistory);
 router.put('/:id', authenticateToken, createHistoryInputRules ,updateHistory);

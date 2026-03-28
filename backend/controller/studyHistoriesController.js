@@ -6,6 +6,10 @@ const { validationResult } = require('express-validator');
 const getAllHistories = async (req, res) => {
   logger.info('start getALLHistories');
   const { from, to } = req.query;
+  const error = validationResult(req);
+  if(!error.isEmpty()){
+    return res.status(400).json({status : 'error',message:error.array()});
+  }
   const fromDate = from ? new Date(from) : undefined;
   const toDate = to ? new Date(new Date(to).setHours(23, 59, 59, 999)) : undefined;
 
