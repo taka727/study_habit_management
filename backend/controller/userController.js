@@ -1,4 +1,3 @@
-const { validationResult } = require('express-validator');
 const prisma = require('../prismaClient');
 const logger = require('../utils/logger');
 const { Prisma } = require('@prisma/client');
@@ -10,7 +9,6 @@ const getUser = async (req, res) => {
     const user = await prisma.users.findUnique({
       where: {
         id: req.user.id,
-        deleted_at: null,
       },
       select: {
         id: true,

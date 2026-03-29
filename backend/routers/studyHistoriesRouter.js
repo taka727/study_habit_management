@@ -29,6 +29,12 @@ const updateHistoryInputRules = [
     .withMessage('日付の形式が間違っています。(YYYY-MM-DD)'),
 ];
 
+const startHistoryInputRules = [
+  body('task_id')
+    .optional()
+    .isInt({min: 1}),
+];
+
 const getHistoryInputRules = [
   query('from').optional().isISO8601(),
   query('to').optional().isISO8601(),
@@ -39,7 +45,7 @@ router.post('/', authenticateToken, createHistoryInputRules, createHistory);
 router.get('/:id', authenticateToken, getHistory);
 router.put('/:id', authenticateToken, updateHistoryInputRules, updateHistory);
 router.delete('/:id', authenticateToken, deleteHistory);
-router.post('/start', authenticateToken, createHistoryInputRules, startStudyHistory);
+router.post('/start', authenticateToken, startHistoryInputRules, startStudyHistory);
 router.put('/:id/end', authenticateToken, endStudyHistory);
 
 module.exports = router;
