@@ -96,7 +96,7 @@ const updateHistory = async (req, res) => {
   const { task_id, description, occurred_on, started_at, ended_at } = req.body;
 
   try {
-    const updatedHistory = await prisma.study_histories.update({
+    const updatedHistory = await prisma.study_histories.updateMany({
       where: {
         id: parseInt(id),
         deleted_at: null,
@@ -109,6 +109,9 @@ const updateHistory = async (req, res) => {
         ended_at,
       },
     });
+    if (updatedHistory.count === 0) {
+      return res.status(404).json({ status: 'error', message: '履歴が存在しません' });
+    }
     res.status(200).json({ status: 'success', data: updatedHistory });
   } catch (error) {
     res.status(500).json({ status: 'error', message: 'サーバーエラー' });
@@ -173,7 +176,7 @@ const endStudyHistory = async (req, res) => {
   logger.info('start endStudyHistory');
   const { id } = req.params;
   try {
-    const endedHistory = await prisma.study_histories.update({
+    const endedHistory = await prisma.study_histories.updateMany({
       where: {
         id: parseInt(id),
         deleted_at: null,
@@ -182,6 +185,9 @@ const endStudyHistory = async (req, res) => {
         ended_at: new Date(),
       },
     });
+    if (endedHistory.count === 0) {
+      return res.status(404).json({ status: 'error', message: '履歴が存在しません' });
+    }
     res.status(200).json({ status: 'success', data: endedHistory });
   } catch (error) {
     res.status(500).json({ status: 'error', message: 'サーバーエラー' });
