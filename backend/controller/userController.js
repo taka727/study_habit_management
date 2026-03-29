@@ -22,11 +22,11 @@ const getUser = async (req, res) => {
     });
 
     if (!user) {
-      logger.info(`getUser: User not found with ID: ${req.user?.id}`);
+      logger.info(`getUser: User not found with ID: ${req.user.id}`);
       return res.status(404).json({ status: 'error', message: 'ユーザが存在しません' });
     }
 
-    logger.info(`getUser: Successfully fetched user with ID: ${req.user?.id}`);
+    logger.info(`getUser: Successfully fetched user with ID: ${req.user.id}`);
     res.status(200).json({ status: 'success', data: user });
   } catch (error) {
     logger.error('getUser: Error occurred:', error);
@@ -82,7 +82,7 @@ const updateUser = async (req, res) => {
       },
     });
 
-    logger.info(`updateUser: Successfully updated user with ID: ${req.user?.id}`);
+    logger.info(`updateUser: Successfully updated user with ID: ${req.user.id}`);
     res.status(200).json({ status: 'success', data: updatedUser });
   } catch (error) {
     logger.error('updateUser: Error occurred:', error);
@@ -119,12 +119,12 @@ const deleteUser = async (req, res) => {
     });
 
     if (result.count === 0) {
-      logger.info(`deleteUser: User not found or already deleted: ${req.user?.id}`);
+      logger.info(`deleteUser: User not found or already deleted: ${req.user.id}`);
       return res.status(404).json({ status: 'error', message: 'ユーザが存在しません' });
     }
 
     const deletedUser = await prisma.users.findUnique({
-      where: { id: req.user?.id },
+      where: { id: req.user.id },
       select: {
         id: true,
         name: true,
