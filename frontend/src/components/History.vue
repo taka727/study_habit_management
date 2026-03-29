@@ -10,8 +10,8 @@ const historyData = ref(taskData);
 const chartInstances = ref<{ [key: string]: Chart }>({});
 let timerId: ReturnType<typeof setTimeout>;
 
-const weekAchievements  = computed(() => {
-  const results: Record<string,ReturnType<typeof calculateWeekAchievement>> = {};
+const weekAchievements = computed(() => {
+  const results: Record<string, ReturnType<typeof calculateWeekAchievement>> = {};
   Object.keys(historyData.value).forEach(weekKey => {
     results[weekKey] = calculateWeekAchievement(historyData.value[weekKey]);
   });
