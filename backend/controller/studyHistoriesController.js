@@ -99,6 +99,7 @@ const updateHistory = async (req, res) => {
     const updatedHistory = await prisma.study_histories.update({
       where: {
         id: parseInt(id),
+        deleted_at: null,
       },
       data: {
         task_id,
