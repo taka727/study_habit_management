@@ -1,206 +1,202 @@
 <script setup lang="ts">
-  import { ref, onMounted, nextTick } from 'vue';
-  import { Chart, registerables } from 'chart.js';
-  import { taskData } from '../assets/script/taskManagerLogic';
-  import { setActive } from '../assets/script/navigation.ts';
+import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue';
+import { Chart, registerables } from 'chart.js';
+import { taskData } from '../assets/script/taskManagerLogic';
+import { setActive } from '../assets/script/navigation.ts';
 
-  // Chart.jsのコンポーネントを登録
-  Chart.register(...registerables);
+Chart.register(...registerables);
 
-  const historyData = ref(taskData);
-  const chartInstances = ref<{ [key: string]: Chart }>({});
+const historyData = ref(taskData);
+const chartInstances = ref<{ [key: string]: Chart }>({});
 
-  // 週の達成率を計算する関数
-  const calculateWeekAchievement = (week: any) => {
-    let totalCompleted = 0;
-    let totalTarget = 0;
+const calculateWeekAchievement = (week: any) => {
+  let totalCompleted = 0;
+  let totalTarget = 0;
 
-    Object.values(week).forEach((day: any) => {
-      const completed = day.tasks.reduce((sum: number, task: any) => sum + task.duration, 0);
-      totalCompleted += completed;
-      totalTarget += day.total;
-    });
+  Object.values(week).forEach((day: any) => {
+    const completed = day.tasks.reduce((sum: number, task: any) => sum + task.duration, 0);
+    totalCompleted += completed;
+    totalTarget += day.total;
+  });
 
-    const achievementRate = totalTarget > 0 ? (totalCompleted / totalTarget) * 100 : 0;
-    return {
-      completed: totalCompleted,
-      target: totalTarget,
-      achievementRate: Math.round(achievementRate),
-      remaining: Math.max(0, totalTarget - totalCompleted)
-    };
+  const achievementRate = totalTarget > 0 ? (totalCompleted / totalTarget) * 100 : 0;
+  return {
+    completed: totalCompleted,
+    target: totalTarget,
+    achievementRate: Math.round(achievementRate),
+    remaining: Math.max(0, totalTarget - totalCompleted)
   };
+};
 
-  // 曜日ごとのデータを取得する関数
-  const getDailyData = (week: any) => {
-    const days = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日'];
-    const completedData: number[] = [];
-    const targetData: number[] = [];
+const getDailyData = (week: any) => {
+  const days = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日'];
+  const completedData: number[] = [];
+  const targetData: number[] = [];
 
-    days.forEach(day => {
-      if (Object.keys(week).some(key => key.includes(day[0]))) {
-        const weekdayKey = Object.keys(week).find(key => key.includes(day[0]));
-        if(weekdayKey === undefined) return;
-        const completed = week[weekdayKey].tasks.reduce((sum: number, task: any) => sum + task.duration, 0);
-        completedData.push(completed);
-        targetData.push(week[weekdayKey].total);
-      } else {
-        completedData.push(0);
-        targetData.push(0);
-      }
-    });
-
-    return { days, completedData, targetData };
-  };
-
-  // 円グラフを作成する関数
-  const createPieChart = (canvasId: string, weekData: any) => {
-    const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const achievement = calculateWeekAchievement(weekData);
-
-    // 既存のチャートがあれば削除
-    if (chartInstances.value[canvasId]) {
-      chartInstances.value[canvasId].destroy();
+  days.forEach(day => {
+    if (Object.keys(week).some(key => key.includes(day[0]))) {
+      const weekdayKey = Object.keys(week).find(key => key.includes(day[0]));
+      if (weekdayKey === undefined) return;
+      const completed = week[weekdayKey].tasks.reduce((sum: number, task: any) => sum + task.duration, 0);
+      completedData.push(completed);
+      targetData.push(week[weekdayKey].total);
+    } else {
+      completedData.push(0);
+      targetData.push(0);
     }
+  });
 
-    chartInstances.value[canvasId] = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['達成', '未達成'],
-        datasets: [{
-          data: [achievement.completed, achievement.remaining],
-          backgroundColor: [
-            '#4CAF50',
-            '#E0E0E0'
-          ],
-          borderWidth: 2,
-          borderColor: '#fff'
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              padding: 10,
-              font: {
-                size: 12
-              }
-            }
-          },
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                const label = context.label || '';
-                const value = context.parsed;
-                return `${label}: ${value}分`;
-              }
+  return { days, completedData, targetData };
+};
+
+const createPieChart = (canvasId: string, weekData: any) => {
+  const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const achievement = calculateWeekAchievement(weekData);
+
+  if (chartInstances.value[canvasId]) {
+    chartInstances.value[canvasId].destroy();
+  }
+
+  chartInstances.value[canvasId] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['達成', '未達成'],
+      datasets: [{
+        data: [achievement.completed, achievement.remaining],
+        backgroundColor: [
+          '#4CAF50',
+          '#E0E0E0'
+        ],
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 10,
+            font: {
+              size: 12
             }
           }
         },
-        cutout: '60%'
-      }
-    });
-  };
-
-  // 棒グラフを作成する関数
-  const createBarChart = (canvasId: string, weekData: any) => {
-    const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const dailyData = getDailyData(weekData);
-
-    // 既存のチャートがあれば削除
-    if (chartInstances.value[canvasId]) {
-      chartInstances.value[canvasId].destroy();
-    }
-
-    chartInstances.value[canvasId] = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: dailyData.days,
-        datasets: [
-          {
-            label: '実際の学習時間',
-            data: dailyData.completedData,
-            backgroundColor: '#2196F3',
-            borderColor: '#1976D2',
-            borderWidth: 1
-          },
-          {
-            label: '目標時間',
-            data: dailyData.targetData,
-            backgroundColor: '#FF9800',
-            borderColor: '#F57C00',
-            borderWidth: 1
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const label = context.label || '';
+              const value = context.parsed;
+              return `${label}: ${value}分`;
+            }
           }
-        ]
+        }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: '時間（分）'
+      cutout: '60%'
+    }
+  });
+};
+
+const createBarChart = (canvasId: string, weekData: any) => {
+  const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const dailyData = getDailyData(weekData);
+
+  if (chartInstances.value[canvasId]) {
+    chartInstances.value[canvasId].destroy();
+  }
+
+  chartInstances.value[canvasId] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: dailyData.days,
+      datasets: [
+        {
+          label: '実際の学習時間',
+          data: dailyData.completedData,
+          backgroundColor: '#2196F3',
+          borderColor: '#1976D2',
+          borderWidth: 1
+        },
+        {
+          label: '目標時間',
+          data: dailyData.targetData,
+          backgroundColor: '#FF9800',
+          borderColor: '#F57C00',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: '時間（分）'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            padding: 20,
+            font: {
+              size: 12
             }
           }
         },
-        plugins: {
-          legend: {
-            position: 'top',
-            labels: {
-              padding: 20,
-              font: {
-                size: 12
-              }
-            }
-          },
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                return `${context.dataset.label}: ${context.parsed.y}分`;
-              }
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return `${context.dataset.label}: ${context.parsed.y}分`;
             }
           }
         }
       }
-    });
-  };
-
-  // コンポーネントマウント後にチャートを初期化
-  onMounted(async () => {
-    await nextTick();
-
-    Object.keys(historyData.value).forEach(weekKey => {
-      const pieChartId = `pie-chart-${weekKey}`;
-      const barChartId = `bar-chart-${weekKey}`;
-
-      setTimeout(() => {
-        createPieChart(pieChartId, historyData.value[weekKey]);
-        createBarChart(barChartId, historyData.value[weekKey]);
-      }, 100);
-    });
+    }
   });
+};
 
-  // コンポーネント破棄時にチャートインスタンスをクリーンアップ
-  const cleanup = () => {
-    Object.values(chartInstances.value).forEach(chart => {
-      chart.destroy();
-    });
-    chartInstances.value = {};
-  };
+const cleanup = () => {
+  Object.values(chartInstances.value).forEach(chart => {
+    chart.destroy();
+  });
+  chartInstances.value = {};
+};
+
+onMounted(async () => {
+  await nextTick();
+
+  Object.keys(historyData.value).forEach(weekKey => {
+    const pieChartId = `pie-chart-${weekKey}`;
+    const barChartId = `bar-chart-${weekKey}`;
+
+    setTimeout(() => {
+      createPieChart(pieChartId, historyData.value[weekKey]);
+      createBarChart(barChartId, historyData.value[weekKey]);
+    }, 100);
+  });
+});
+
+onBeforeUnmount(() => {
+  cleanup();
+});
+
 </script>
 
 <template>
@@ -212,7 +208,8 @@
     <nav>
       <ul>
         <li class="home"><router-link to="/" @click="setActive('home')">HOME</router-link></li>
-        <li class="history"><router-link to="/history" class="active" @click="setActive('history')">ヒストリー</router-link></li>
+        <li class="history"><router-link to="/history" class="active" @click="setActive('history')">ヒストリー</router-link>
+        </li>
         <li class="milestone"><router-link to="/milestone" @click="setActive('milestone')">マイルストーン</router-link></li>
         <li class="reading"><router-link to="/reading" @click="setActive('reading')">読書記録</router-link></li>
         <li class="settings"><router-link to="/settings" @click="setActive('settings')">設定</router-link></li>
