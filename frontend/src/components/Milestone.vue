@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { setActive } from '../assets/script/navigation.ts';
-
 const milestones = ref([
   { id: 1, title: "英単語1000語達成", target: "2024年10月末", progress: 65, description: "基本英単語を1000語習得する" },
   { id: 2, title: "TOEIC 800点突破", target: "2024年12月", progress: 40, description: "TOEICスコア800点以上を目指す" },
@@ -17,12 +15,11 @@ const milestones = ref([
     </div>
     <nav>
       <ul>
-        <li class="home"><router-link to="/" @click="setActive('home')">HOME</router-link></li>
-        <li class="history"><router-link to="/history" @click="setActive('history')">ヒストリー</router-link></li>
-        <li class="milestone"><router-link to="/milestone" class="active"
-            @click="setActive('milestone')">マイルストーン</router-link></li>
-        <li class="reading"><router-link to="/reading" @click="setActive('reading')">読書記録</router-link></li>
-        <li class="settings"><router-link to="/settings" @click="setActive('settings')">設定</router-link></li>
+        <li class="home"><router-link to="/">HOME</router-link></li>
+        <li class="history"><router-link to="/history">ヒストリー</router-link></li>
+        <li class="milestone"><router-link to="/milestone" class="active">マイルストーン</router-link></li>
+        <li class="reading"><router-link to="/reading">読書記録</router-link></li>
+        <li class="settings"><router-link to="/settings">設定</router-link></li>
       </ul>
     </nav>
     <div class="milestone-container">

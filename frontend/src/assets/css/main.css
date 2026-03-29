@@ -225,13 +225,13 @@ body {
 .progress-bar {
   height: 6px;
   background: #e2e8f0;
-  border-radius: 3px;
+  border-radius: var(--app-border-radius-sm);
   margin-top: 10px;
 }
 
 .progress-fill {
   background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-  border-radius: 3px;
+  border-radius: var(--app-border-radius-sm);
 }
 
 @media (max-width: 768px) {

@@ -2,7 +2,6 @@
 import { ref, onMounted, nextTick, onBeforeUnmount, computed } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import { taskData } from '../assets/script/taskManagerLogic';
-import { setActive } from '../assets/script/navigation.ts';
 
 Chart.register(...registerables);
 
@@ -217,12 +216,11 @@ onBeforeUnmount(() => {
     </div>
     <nav>
       <ul>
-        <li class="home"><router-link to="/" @click="setActive('home')">HOME</router-link></li>
-        <li class="history"><router-link to="/history" class="active" @click="setActive('history')">ヒストリー</router-link>
-        </li>
-        <li class="milestone"><router-link to="/milestone" @click="setActive('milestone')">マイルストーン</router-link></li>
-        <li class="reading"><router-link to="/reading" @click="setActive('reading')">読書記録</router-link></li>
-        <li class="settings"><router-link to="/settings" @click="setActive('settings')">設定</router-link></li>
+        <li class="home"><router-link to="/">HOME</router-link></li>
+        <li class="history"><router-link to="/history" class="active">ヒストリー</router-link></li>
+        <li class="milestone"><router-link to="/milestone">マイルストーン</router-link></li>
+        <li class="reading"><router-link to="/reading">読書記録</router-link></li>
+        <li class="settings"><router-link to="/settings">設定</router-link></li>
       </ul>
     </nav>
     <div class="history-container">

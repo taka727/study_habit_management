@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { setActive } from '../assets/script/navigation.ts';
-
 const books = ref([
   { id: 1, title: "英語学習の科学", author: "田中博士", status: "読了", rating: 5, notes: "非常に参考になった。学習方法を見直すきっかけになった。" },
   { id: 2, title: "TOEIC攻略法", author: "佐藤先生", status: "読書中", rating: 0, notes: "第3章まで読了。具体的なテクニックが豊富。" },
@@ -21,11 +19,11 @@ function addBook() {
     </div>
     <nav>
       <ul>
-        <li class="home"><router-link to="/" @click="setActive('home')">HOME</router-link></li>
-        <li class="history"><router-link to="/history" @click="setActive('history')">ヒストリー</router-link></li>
-        <li class="milestone"><router-link to="/milestone" @click="setActive('milestone')">マイルストーン</router-link></li>
-        <li class="reading"><router-link to="/reading" class="active" @click="setActive('reading')">読書記録</router-link></li>
-        <li class="settings"><router-link to="/settings" @click="setActive('settings')">設定</router-link></li>
+        <li class="home"><router-link to="/">HOME</router-link></li>
+        <li class="history"><router-link to="/history">ヒストリー</router-link></li>
+        <li class="milestone"><router-link to="/milestone">マイルストーン</router-link></li>
+        <li class="reading"><router-link to="/reading" class="active">読書記録</router-link></li>
+        <li class="settings"><router-link to="/settings">設定</router-link></li>
       </ul>
     </nav>
     <div class="reading-container">
