@@ -22,17 +22,18 @@ const createHistoryInputRules = [
     .withMessage('日付の形式が間違っています。(YYYY-MM-DD)'),
 ];
 
-const getHistoryInputRules = [
-  query('from')
-    .optional().isISO8601(),
+const updateHistoryInputRules = [
+  body('occurred_on').isISO8601().withMessage('日付の形式が間違っています。(YYYY-MM-DD)'),
 ];
 
-router.get('/', authenticateToken, getHistoryInputRules , getAllHistories);
+const getHistoryInputRules = [query('from').optional().isISO8601()];
+
+router.get('/', authenticateToken, getHistoryInputRules, getAllHistories);
 router.post('/', authenticateToken, createHistoryInputRules, createHistory);
 router.get('/:id', authenticateToken, getHistory);
-router.put('/:id', authenticateToken, createHistoryInputRules ,updateHistory);
+router.put('/:id', authenticateToken, updateHistoryInputRules, updateHistory);
 router.delete('/:id', authenticateToken, deleteHistory);
-router.post('/start', authenticateToken, createHistoryInputRules ,startStudyHistory);
+router.post('/start', authenticateToken, createHistoryInputRules, startStudyHistory);
 router.put('/:id/end', authenticateToken, endStudyHistory);
 
 module.exports = router;
