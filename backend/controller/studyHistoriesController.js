@@ -112,6 +112,7 @@ const updateHistory = async (req, res) => {
     if (updatedHistory.count === 0) {
       return res.status(404).json({ status: 'error', message: '履歴が存在しません' });
     }
+    const updated = await prisma.study_histories.findFirst({ where: { id: parseInt(id) } });
     res.status(200).json({ status: 'success', data: updatedHistory });
   } catch (error) {
     res.status(500).json({ status: 'error', message: 'サーバーエラー' });
@@ -188,7 +189,8 @@ const endStudyHistory = async (req, res) => {
     if (endedHistory.count === 0) {
       return res.status(404).json({ status: 'error', message: '履歴が存在しません' });
     }
-    res.status(200).json({ status: 'success', data: endedHistory });
+    const updated = await prisma.study_histories.findFirst({ where: { id: parseInt(id) } });
+    res.status(200).json({ status: 'success', data: updated });
   } catch (error) {
     res.status(500).json({ status: 'error', message: 'サーバーエラー' });
   } finally {
