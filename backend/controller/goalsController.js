@@ -21,7 +21,7 @@ const getAllGoals = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
+      .json({ status: 'error', message: 'サーバーエラー' });
   }
 };
 
@@ -45,7 +45,7 @@ const getGoalById = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
+      .json({ status: 'error', message: 'サーバーエラー' });
   }
 };
 
@@ -67,7 +67,7 @@ const createGoal = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
+      .json({ status: 'error', message: 'サーバーエラー' });
   }
 };
 
@@ -91,7 +91,7 @@ const updateGoal = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ status: 'error', message: 'サーバーエラー:' + error.message });
+      .json({ status: 'error', message: 'サーバーエラー' });
   }
 };
 
@@ -110,7 +110,7 @@ const deleteGoal = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: 'error',
-      message: 'サーバーエラー：' + error.message,
+      message: 'サーバーエラー',
     });
   }
 };
