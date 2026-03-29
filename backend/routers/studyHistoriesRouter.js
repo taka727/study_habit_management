@@ -23,7 +23,10 @@ const createHistoryInputRules = [
 ];
 
 const updateHistoryInputRules = [
-  body('occurred_on').isISO8601().withMessage('日付の形式が間違っています。(YYYY-MM-DD)'),
+  body('occurred_on')
+    .optional()
+    .isISO8601()
+    .withMessage('日付の形式が間違っています。(YYYY-MM-DD)'),
 ];
 
 const getHistoryInputRules = [

@@ -10,14 +10,10 @@ const {
 
 const router = express.Router();
 
-const { body } = require('express-validator');
-
-const deleteUserInputRules = [body('id').notEmpty().withMessage('idは必須です')];
-
 router.get('/', authenticateToken, getUser);
 router.put('/', authenticateToken, updateUser);
 router.get('/settings', authenticateToken, getUserSettings);
 router.put('/settings', authenticateToken, updateUserSettings);
-router.delete('/', authenticateToken, deleteUserInputRules, deleteUser);
+router.delete('/', authenticateToken, deleteUser);
 
 module.exports = router;
