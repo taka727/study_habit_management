@@ -13,7 +13,7 @@ describe('Tasks API', () => {
     });
   });
 
-  describe('GET /tasks/:taskId', () => {
+  describe('GET /tasks/:id', () => {
     it('should return a specific task', async () => {
       const res = await request(app)
         .get('/tasks/1')

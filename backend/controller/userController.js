@@ -4,13 +4,11 @@ const { Prisma } = require('@prisma/client');
 
 const getUser = async (req, res) => {
   logger.info('start getUser');
-  try {
-    // 認証ミドルウェアからユーザーIDを取得（または固定値）
-    const userId = req.user?.id || 1;
 
+  try {
     const user = await prisma.users.findUnique({
       where: {
-        id: userId,
+        id: req.user.id,
       },
       select: {
         id: true,
@@ -22,11 +20,11 @@ const getUser = async (req, res) => {
     });
 
     if (!user) {
-      logger.info(`getUser: User not found with ID: ${userId}`);
+      logger.info(`getUser: User not found with ID: ${req.user.id}`);
       return res.status(404).json({ status: 'error', message: 'ユーザが存在しません' });
     }
 
-    logger.info(`getUser: Successfully fetched user with ID: ${userId}`);
+    logger.info(`getUser: Successfully fetched user with ID: ${req.user.id}`);
     res.status(200).json({ status: 'success', data: user });
   } catch (error) {
     logger.error('getUser: Error occurred:', error);
@@ -39,11 +37,8 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
   logger.info('start updateUser');
   try {
-    // 認証ミドルウェアからユーザーIDを取得（または固定値）
-    const userId = req.user?.id || 1;
     const { name, login_name } = req.body;
 
-    // バリデーション
     if (!name) {
       logger.info('updateUser: No fields to update');
       return res.status(400).json({
@@ -60,7 +55,6 @@ const updateUser = async (req, res) => {
       });
     }
 
-    // 更新するデータを動的に作成
     const updateData = {};
     if (name !== undefined && typeof name === 'string' && name.length > 0 && name.length < 100)
       updateData.name = name;
@@ -72,10 +66,10 @@ const updateUser = async (req, res) => {
     )
       updateData.login_name = login_name;
 
-    logger.info(`updateUser: Updating user ID: ${userId} with data:`, updateData);
+    logger.info(`updateUser: Updating user ID: ${req.user.id} with data:`, updateData);
 
     const updatedUser = await prisma.users.update({
-      where: { id: userId },
+      where: { id: req.user.id },
       data: updateData,
       select: {
         id: true,
@@ -86,7 +80,7 @@ const updateUser = async (req, res) => {
       },
     });
 
-    logger.info(`updateUser: Successfully updated user with ID: ${userId}`);
+    logger.info(`updateUser: Successfully updated user with ID: ${req.user.id}`);
     res.status(200).json({ status: 'success', data: updatedUser });
   } catch (error) {
     logger.error('updateUser: Error occurred:', error);
@@ -115,24 +109,20 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   logger.info('start deleteUser');
   try {
-    // 認証ミドルウェアからユーザーIDを取得（または固定値）
-    const userId = req.user?.id || 1;
+    logger.info(`deleteUser: Attempting to delete user with ID: ${req.user.id}`);
 
-    logger.info(`deleteUser: Attempting to delete user with ID: ${userId}`);
-
-    // ソフトデリートの実装 (アトミックに削除済みでないユーザのみ更新)
     const result = await prisma.users.updateMany({
-      where: { id: userId, deleted_at: null },
+      where: { id: req.user.id, deleted_at: null },
       data: { deleted_at: new Date() },
     });
 
     if (result.count === 0) {
-      logger.info(`deleteUser: User not found or already deleted: ${userId}`);
+      logger.info(`deleteUser: User not found or already deleted: ${req.user.id}`);
       return res.status(404).json({ status: 'error', message: 'ユーザが存在しません' });
     }
 
     const deletedUser = await prisma.users.findUnique({
-      where: { id: userId },
+      where: { id: req.user.id },
       select: {
         id: true,
         name: true,
@@ -141,7 +131,7 @@ const deleteUser = async (req, res) => {
       },
     });
 
-    logger.info(`deleteUser: Successfully soft-deleted user with ID: ${userId}`);
+    logger.info(`deleteUser: Successfully soft-deleted user with ID: ${req.user.id}`);
     res.status(200).json({
       status: 'success',
       message: 'ユーザを削除しました',
