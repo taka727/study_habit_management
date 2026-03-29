@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue';
+import { ref, onMounted, nextTick, onBeforeUnmount, computed } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import { taskData } from '../assets/script/taskManagerLogic';
 import { setActive } from '../assets/script/navigation.ts';
@@ -8,6 +8,16 @@ Chart.register(...registerables);
 
 const historyData = ref(taskData);
 const chartInstances = ref<{ [key: string]: Chart }>({});
+let timerId: ReturnType<typeof setTimeout>;
+
+const weekAchievements  = computed(() => {
+  const results: Record<string,ReturnType<typeof calculateWeekAchievement>> = {};
+  Object.keys(historyData.value).forEach(weekKey => {
+    results[weekKey] = calculateWeekAchievement(historyData.value[weekKey]);
+  });
+  return results;
+});
+
 
 const calculateWeekAchievement = (week: any) => {
   let totalCompleted = 0;
@@ -179,8 +189,6 @@ const cleanup = () => {
   chartInstances.value = {};
 };
 
-let timerId : ReturnType<typeof setTimeout>;
-
 onMounted(async () => {
   await nextTick();
 
@@ -223,11 +231,11 @@ onBeforeUnmount(() => {
           <div class="week-title">{{ String(weekKey).toUpperCase() }}</div>
           <div class="week-summary">
             <span class="achievement-badge" :class="{
-              'high': calculateWeekAchievement(week).achievementRate >= 80,
-              'medium': calculateWeekAchievement(week).achievementRate >= 60,
-              'low': calculateWeekAchievement(week).achievementRate < 60
+              'high': weekAchievements[weekKey].achievementRate >= 80,
+              'medium': weekAchievements[weekKey].achievementRate >= 60,
+              'low': weekAchievements[weekKey].achievementRate < 60
             }">
-              {{ calculateWeekAchievement(week).achievementRate }}% 達成
+              {{ weekAchievements[weekKey].achievementRate }}% 達成
             </span>
           </div>
         </summary>
@@ -238,18 +246,18 @@ onBeforeUnmount(() => {
             <div class="chart-wrapper">
               <canvas :id="`pie-chart-${weekKey}`"></canvas>
               <div class="chart-center-text">
-                <div class="percentage">{{ calculateWeekAchievement(week).achievementRate }}%</div>
+                <div class="percentage">{{ weekAchievements[weekKey].achievementRate }}%</div>
                 <div class="label">達成率</div>
               </div>
             </div>
             <div class="chart-stats">
               <div class="stat-item">
                 <span class="stat-label">完了時間:</span>
-                <span class="stat-value">{{ calculateWeekAchievement(week).completed }}分</span>
+                <span class="stat-value">{{ weekAchievements[weekKey].completed }}分</span>
               </div>
               <div class="stat-item">
                 <span class="stat-label">目標時間:</span>
-                <span class="stat-value">{{ calculateWeekAchievement(week).target }}分</span>
+                <span class="stat-value">{{ weekAchievements[weekKey].target }}分</span>
               </div>
             </div>
           </div>
