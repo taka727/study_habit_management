@@ -1,5 +1,3 @@
-@import './base.css';
-
 .reading-container {
   max-width: var(--app-max-width);
   margin: 0 auto;
