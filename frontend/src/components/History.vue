@@ -179,14 +179,15 @@ const cleanup = () => {
   chartInstances.value = {};
 };
 
+let timerId : ReturnType<typeof setTimeout>;
+
 onMounted(async () => {
   await nextTick();
 
   Object.keys(historyData.value).forEach(weekKey => {
     const pieChartId = `pie-chart-${weekKey}`;
     const barChartId = `bar-chart-${weekKey}`;
-
-    setTimeout(() => {
+    timerId = setTimeout(() => {
       createPieChart(pieChartId, historyData.value[weekKey]);
       createBarChart(barChartId, historyData.value[weekKey]);
     }, 100);
@@ -194,6 +195,7 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  clearTimeout(timerId);
   cleanup();
 });
 
