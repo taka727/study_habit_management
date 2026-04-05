@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { taskData, selectWeek, renderBoard, addTask, editTask } from '../assets/script/taskManagerLogic.ts';
-import { setActive } from '../assets/script/navigation.ts';
 import { onMounted } from 'vue';
 
 // 初期化
