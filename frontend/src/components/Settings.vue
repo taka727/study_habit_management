@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { setActive } from '../assets/script/navigation.ts';
-
 const settings = ref({
   notifications: true,
   dailyGoal: 120,
@@ -22,11 +20,11 @@ function saveSettings() {
     </div>
     <nav>
       <ul>
-        <li class="home"><router-link to="/" @click="setActive('home')">HOME</router-link></li>
-        <li class="history"><router-link to="/history" @click="setActive('history')">ヒストリー</router-link></li>
-        <li class="milestone"><router-link to="/milestone" @click="setActive('milestone')">マイルストーン</router-link></li>
-        <li class="reading"><router-link to="/reading" @click="setActive('reading')">読書記録</router-link></li>
-        <li class="settings"><router-link to="/settings" class="active" @click="setActive('settings')">設定</router-link></li>
+        <li class="home"><router-link to="/">HOME</router-link></li>
+        <li class="history"><router-link to="/history">ヒストリー</router-link></li>
+        <li class="milestone"><router-link to="/milestone">マイルストーン</router-link></li>
+        <li class="reading"><router-link to="/reading">読書記録</router-link></li>
+        <li class="settings"><router-link to="/settings" class="active">設定</router-link></li>
       </ul>
     </nav>
     <div class="settings-container">
@@ -73,52 +71,4 @@ function saveSettings() {
   </div>
 </template>
 
-<style scoped>
-.settings-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 30px 20px;padding: 20px;
-  max-width: 600px;
-}
-
-.setting-group {
-  margin-bottom: 30px;
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.setting-group h3 {
-  margin-bottom: 15px;
-  color: #333;
-}
-
-.setting-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.setting-item input,
-.setting-item select {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.save-btn {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.save-btn:hover {
-  background: #45a049;
-}
-</style>
+<style scoped src="../assets/css/settings.css" ></style>

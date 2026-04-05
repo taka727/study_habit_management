@@ -1,0 +1,52 @@
+.milestone-container {
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+  padding: 30px 20px;
+  display: grid;
+  gap: 20px;
+}
+
+.milestone-card {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: var(--app-shadow-card);
+}
+
+.milestone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.target-date {
+  color: var(--app-text-secondary);
+  font-size: 14px;
+}
+
+.description {
+  color: var(--app-text-muted);
+  margin-bottom: 15px;
+}
+
+.progress-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #eee;
+}
+
+.progress-fill {
+  background: linear-gradient(45deg, var(--app-color-primary), var(--app-color-primary-dark));
+}
+
+.progress-text {
+  font-weight: bold;
+  color: var(--app-color-primary);
+}

@@ -1,0 +1,84 @@
+.reading-container {
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.add-book-btn {
+  background: var(--app-color-primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.book-card {
+  background: white;
+  padding: 20px;
+  border-radius: var(--app-border-radius-md);
+  box-shadow: var(--app-shadow-card);
+}
+
+.book-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-badge.読了 {
+  background: var(--app-color-primary);
+  color: white;
+}
+
+.status-badge.読書中 {
+  background: var(--app-color-warning);
+  color: white;
+}
+
+.status-badge.予定 {
+  background: var(--app-color-neutral);
+  color: white;
+}
+
+.author {
+  color: var(--app-text-secondary);
+  margin-bottom: 10px;
+}
+
+.rating {
+  margin: 10px 0;
+}
+
+.star {
+  opacity: 0.3;
+}
+
+.star.filled {
+  opacity: 1;
+}
+
+.notes h4 {
+  margin: 10px 0 5px 0;
+  color: var(--app-text-primary);
+}
+
+.notes p {
+  color: var(--app-text-secondary);
+  font-size: 14px;
+}
