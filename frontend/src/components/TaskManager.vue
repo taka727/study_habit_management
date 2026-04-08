@@ -9,7 +9,6 @@ onMounted(() => {
 </script>
 
 <template>
-
   <div>
     <div class="header">
       <h1>📚 学習管理ボード</h1>
