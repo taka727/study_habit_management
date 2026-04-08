@@ -10,7 +10,7 @@ onMounted(() => {
 
 <template>
 
-  <body>
+  <div>
     <div class="header">
       <h1>📚 学習管理ボード</h1>
       <p>毎日の学習タスクを効率的に管理しましょう</p>
@@ -38,5 +38,5 @@ onMounted(() => {
         <!-- タスクボードの内容はJSで動的生成 -->
       </div>
     </div>
-  </body>
+  </div>
 </template>
