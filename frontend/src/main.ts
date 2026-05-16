@@ -1,5 +1,4 @@
 import './assets/css/main.css'
-import './assets/script/taskManagerLogic.ts'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
