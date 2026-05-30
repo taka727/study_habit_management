@@ -1,17 +1,5 @@
-import axios, { AxiosHeaders, type InternalAxiosRequestConfig } from 'axios'
-
-const baseURL = import.meta.env.VITE_API_BASE_URL
-
-if (!baseURL) {
-  throw new Error('VITE_API_BASE_URL is not set')
-}
-
-const apiClient = axios.create({
-  baseURL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
+import axios, { AxiosHeaders, type AxiosInstance, type InternalAxiosRequestConfig } from 'axios'
+import mockClient from './mockClient'
 
 export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem('token')
@@ -39,13 +27,23 @@ export const responseErrorInterceptor = (error: unknown) => {
   return Promise.reject(error)
 }
 
-// リクエストインターセプター（認証トークン付与）
-apiClient.interceptors.request.use(requestInterceptor)
+function createRealClient(): AxiosInstance {
+  const baseURL = import.meta.env.VITE_API_BASE_URL
+  if (!baseURL) {
+    throw new Error('VITE_API_BASE_URL is not set')
+  }
+  const client = axios.create({
+    baseURL,
+    headers: { 'Content-Type': 'application/json' },
+  })
+  client.interceptors.request.use(requestInterceptor)
+  client.interceptors.response.use((response) => response, responseErrorInterceptor)
+  return client
+}
 
-// レスポンスインターセプター（エラーハンドリング）
-apiClient.interceptors.response.use(
-  (response) => response,
-  responseErrorInterceptor,
-)
+const apiClient =
+  import.meta.env.VITE_USE_MOCK === 'true'
+    ? mockClient
+    : (createRealClient() as unknown as typeof mockClient)
 
 export default apiClient
