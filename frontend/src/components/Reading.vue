@@ -23,7 +23,7 @@ async function fetchBooks() {
   try {
     const response = await apiClient.get<{ status: string; data: Book[] }>('/books')
     books.value = response.data.data
-  } catch (e) {
+  } catch {
     error.value = '書籍の取得に失敗しました'
   } finally {
     isLoading.value = false
@@ -41,7 +41,7 @@ async function addBook() {
     newTitle.value = ''
     newDescription.value = ''
     showForm.value = false
-  } catch (e) {
+  } catch {
     error.value = '書籍の追加に失敗しました'
   }
 }
@@ -50,7 +50,7 @@ async function deleteBook(id: number) {
   try {
     await apiClient.delete(`/books/${id}`)
     books.value = books.value.filter((b) => b.id !== id)
-  } catch (e) {
+  } catch {
     error.value = '書籍の削除に失敗しました'
   }
 }
