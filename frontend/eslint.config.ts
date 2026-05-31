@@ -21,6 +21,15 @@ export default defineConfigWithVueTs(
 
   pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
+
+  {
+    rules: {
+      'vue/multi-word-component-names': [
+        'error',
+        { ignores: ['Milestone', 'Reading', 'History', 'Settings'] },
+      ],
+    },
+  },
   
   {
     ...pluginVitest.configs.recommended,
