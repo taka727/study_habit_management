@@ -1,23 +1,19 @@
 // Settings.vue 用モックハンドラー (/user)
 
-export interface UserSettings {
+export interface User {
   id: number
   name: string
-  email: string
-  notifications: boolean
-  dailyGoal: number
-  theme: 'light' | 'dark'
-  language: 'ja' | 'en'
+  login_name: string
+  created_at: string
+  updated_at: string
 }
 
-let userSettings: UserSettings = {
+let user: User = {
   id: 1,
   name: 'テストユーザー',
-  email: 'test@example.com',
-  notifications: true,
-  dailyGoal: 120,
-  theme: 'light',
-  language: 'ja',
+  login_name: 'testuser',
+  created_at: '2024-01-01T00:00:00.000Z',
+  updated_at: '2024-01-01T00:00:00.000Z',
 }
 
 export function handleSettings(
@@ -26,12 +22,15 @@ export function handleSettings(
   body?: unknown,
 ): Record<string, unknown> | null {
   if (method === 'GET' && url === '/user') {
-    return { status: 'success', data: { ...userSettings } }
+    return { status: 'success', data: { ...user } }
   }
 
   if (method === 'PUT' && url === '/user') {
-    userSettings = { ...userSettings, ...(body as Partial<UserSettings>) }
-    return { status: 'success', data: { ...userSettings } }
+    const { name, login_name } = body as { name?: string; login_name?: string }
+    if (name) user.name = name
+    if (login_name) user.login_name = login_name
+    user.updated_at = new Date().toISOString()
+    return { status: 'success', data: { ...user } }
   }
 
   return null

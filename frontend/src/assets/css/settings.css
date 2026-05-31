@@ -44,3 +44,14 @@
 .save-btn:hover {
   background: var(--app-color-primary-dark);
 }
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.success-message {
+  color: var(--app-color-primary);
+  font-weight: bold;
+  margin-bottom: 12px;
+}
