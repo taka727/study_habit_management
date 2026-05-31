@@ -28,6 +28,10 @@ export default defineConfigWithVueTs(
         'error',
         { ignores: ['Milestone', 'Reading', 'History', 'Settings'] },
       ],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
     },
   },
   
