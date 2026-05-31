@@ -1,10 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-const milestones = ref([
-  { id: 1, title: "英単語1000語達成", target: "2024年10月末", progress: 65, description: "基本英単語を1000語習得する" },
-  { id: 2, title: "TOEIC 800点突破", target: "2024年12月", progress: 40, description: "TOEICスコア800点以上を目指す" },
-  { id: 3, title: "毎日学習100日達成", target: "2024年11月", progress: 85, description: "連続100日間の学習習慣を確立する" }
-]);
+import { ref, onMounted } from 'vue';
+import apiClient from '../api/client';
+
+interface Milestone {
+  id: number;
+  title: string;
+  target: string;
+  progress: number;
+  description: string;
+}
+
+const milestones = ref<Milestone[]>([]);
+
+async function fetchMilestones() {
+  try {
+    const response = await apiClient.get<{ status: string; data: Milestone[] }>('/goals');
+    milestones.value = response.data.data;
+  } catch (error) {
+    console.error('マイルストーンの取得に失敗しました', error);
+  }
+}
+
+onMounted(fetchMilestones);
 </script>
 
 <template>
