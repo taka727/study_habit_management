@@ -14,9 +14,40 @@
   margin-bottom: 20px;
 }
 
+.add-book-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--app-color-neutral);
+  padding: 20px;
+  border-radius: 6px;
+  background: white;
+  .form-btn {
+    background: var(--app-color-secondary);
+    color: black;
+    border: 1px solid var(--app-color-neutral);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .input-title,
+  .input-description {
+    padding: 10px;
+    border: 1px solid var(--app-color-neutral);
+    border-radius: 6px;
+    &.input-error {
+      &::placeholder {
+        color: var(--app-color-danger);
+      }
+      border-color: var(--app-color-danger);
+    }
+  }
+}
+
 .book-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  padding-top: 20px;
   gap: 20px;
 }
 
