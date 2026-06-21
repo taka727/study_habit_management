@@ -1,14 +1,10 @@
 #!/bin/bash
+# MySQLの起動を待機する。
+# ユーザー作成と権限付与は MySQL イメージの MYSQL_USER 環境変数および
+# mysql-init/01-init.sql が担当するため、ここでは行わない。
 until mysql -h mysql -u root -p"${BACKEND_DB_PASSWORD}" -e 'SELECT 1'; do
     echo 'Waiting for MySQL...'
     sleep 2
 done
-
-mysql -h mysql -u root -p"${BACKEND_DB_PASSWORD}" -e "
-    CREATE USER IF NOT EXISTS '${BACKEND_USER_ID}'@'%' IDENTIFIED BY '${BACKEND_DB_PASSWORD}';
-    GRANT ALL PRIVILEGES ON *.* TO '${BACKEND_USER_ID}'@'%' WITH GRANT OPTION;
-    GRANT CREATE ON *.* TO '${BACKEND_USER_ID}'@'%';
-    FLUSH PRIVILEGES;
-    " 
 
 npm run dev
