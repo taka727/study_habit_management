@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -14,7 +17,6 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@types/axios": "^0.9.36",
     "axios": "1.12.2",
     "chart.js": "^4.5.0",
     "pinia": "^3.0.1",
