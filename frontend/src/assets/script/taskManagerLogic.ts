@@ -18,10 +18,7 @@ export type TaskData = {
     };
 };
 
-let currentWeek: string = "1";
-
-export function selectWeek(week: number, event: MouseEvent) {
-    currentWeek = week.toString();
+export function selectWeek(_week: number, event: MouseEvent) {
     document.querySelectorAll('.week-tab').forEach(tab => tab.classList.remove('active'));
     (event.target as HTMLElement).classList.add('active');
     renderBoard();
