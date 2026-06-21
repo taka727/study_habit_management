@@ -63,11 +63,9 @@ jspm_packages/
 
 # MySQL data directory
 mysql-data/
-mysql-init/
 
 # Docker volumes
 **/mysql-data/
-**/mysql-init/
 
 # Personal notes and AI chat logs
 claude.md
