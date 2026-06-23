@@ -1,14 +1,79 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-const books = ref([
-  { id: 1, title: "英語学習の科学", author: "田中博士", status: "読了", rating: 5, notes: "非常に参考になった。学習方法を見直すきっかけになった。" },
-  { id: 2, title: "TOEIC攻略法", author: "佐藤先生", status: "読書中", rating: 0, notes: "第3章まで読了。具体的なテクニックが豊富。" },
-  { id: 3, title: "English Grammar in Use", author: "Raymond Murphy", status: "予定", rating: 0, notes: "" }
-]);
+import { ref, onMounted } from 'vue'
+import apiClient from '../api/client'
 
-function addBook() {
-  alert('新しい本を追加する機能を実装予定です');
+interface Book {
+  id: number
+  title: string
+  description: string | null
 }
+
+const books = ref<Book[]>([])
+const isLoading = ref(false)
+const error = ref<string | null>(null)
+
+const showForm = ref(false)
+const newTitle = ref('')
+const newDescription = ref('')
+
+const titlePlaceholder = ref('タイトル（必須）')
+const isTitleError = ref(false)
+
+async function fetchBooks() {
+  isLoading.value = true
+  error.value = null
+  try {
+    const response = await apiClient.get<{ status: string; data: Book[] }>('/books')
+    books.value = response.data.data
+  } catch {
+    error.value = '書籍の取得に失敗しました'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+async function addBook() {
+  if (!newTitle.value.trim()) {
+    isTitleError.value = true
+    titlePlaceholder.value = 'エラー：タイトルは必須です'
+    return
+  }
+
+  try {
+    const response = await apiClient.post<{ status: string; book: Book }>('/books', {
+      title: newTitle.value.trim(),
+      description: newDescription.value.trim() || null,
+    })
+    books.value.push(response.data.book)
+
+    // 成功したらフォームをリセット
+    newTitle.value = ''
+    newDescription.value = ''
+    titlePlaceholder.value = 'タイトル（必須）'
+    isTitleError.value = false
+    showForm.value = false
+  } catch {
+    error.value = '書籍の追加に失敗しました'
+  }
+}
+
+function handleTitleInput() {
+  if (newTitle.value.length > 0) {
+    isTitleError.value = false
+    titlePlaceholder.value = 'タイトル（必須）'
+  }
+}
+
+async function deleteBook(id: number) {
+  try {
+    await apiClient.delete(`/books/${id}`)
+    books.value = books.value.filter((b) => b.id !== id)
+  } catch {
+    error.value = '書籍の削除に失敗しました'
+  }
+}
+
+onMounted(fetchBooks)
 </script>
 
 <template>
@@ -27,25 +92,39 @@ function addBook() {
       </ul>
     </nav>
     <div class="reading-container">
-      <button @click="addBook" class="add-book-btn">📖 新しい本を追加</button>
-      <div class="book-grid">
+      <p v-if="error" class="error-message">{{ error }}</p>
+
+      <button @click="showForm = !showForm" class="add-book-btn">📖 新しい本を追加</button>
+
+      <div v-if="showForm" class="add-book-form">
+        <input
+          v-model="newTitle"
+          id="new-title"
+          class="input-title"
+          :class="{ 'input-error': isTitleError }"
+          :placeholder="titlePlaceholder"
+          @input="handleTitleInput"
+        />
+        <input v-model="newDescription" id="new-description" class="input-description" placeholder="メモ（任意）" />
+        <button @click="addBook" class="form-btn">追加</button>
+        <button @click="showForm = false" class="form-btn">キャンセル</button>
+      </div>
+
+      <p v-if="isLoading">読み込み中...</p>
+
+      <div v-else class="book-grid">
         <div v-for="book in books" :key="book.id" class="book-card">
           <div class="book-header">
             <h3>{{ book.title }}</h3>
-            <span class="status-badge" :class="book.status">{{ book.status }}</span>
           </div>
-          <p class="author">著者: {{ book.author }}</p>
-          <div v-if="book.rating > 0" class="rating">
-            <span v-for="i in 5" :key="i" class="star" :class="{ filled: i <= book.rating }">⭐</span>
+          <div v-if="book.description" class="notes">
+            <p>{{ book.description }}</p>
           </div>
-          <div v-if="book.notes" class="notes">
-            <h4>メモ:</h4>
-            <p>{{ book.notes }}</p>
-          </div>
+          <button @click="deleteBook(book.id)" class="delete-btn">削除</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped src="../assets/css/reading.css" ></style>
+<style scoped src="../assets/css/reading.css"></style>

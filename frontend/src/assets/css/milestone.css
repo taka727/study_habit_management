@@ -50,3 +50,82 @@
   font-weight: bold;
   color: var(--app-color-primary);
 }
+
+.add-btn {
+  padding: 10px 22px;
+  background: var(--app-color-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.goal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: white;
+  border: 1px solid var(--app-color-neutral);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  input { padding: 8px 10px; border: 1px solid var(--app-color-neutral); border-radius: 6px; }
+}
+
+.form-date-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--app-text-secondary);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.save-btn {
+  padding: 8px 20px;
+  background: var(--app-color-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.cancel-btn {
+  padding: 8px 20px;
+  background: var(--app-color-secondary);
+  border: 1px solid var(--app-color-neutral);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.edit-btn {
+  padding: 4px 14px;
+  background: var(--app-color-secondary);
+  border: 1px solid var(--app-color-neutral);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.delete-btn {
+  padding: 4px 14px;
+  background: white;
+  border: 1px solid var(--app-color-danger);
+  color: var(--app-color-danger);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}

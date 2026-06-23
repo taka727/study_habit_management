@@ -149,20 +149,131 @@
   color: var(--app-color-primary);
 }
 
+/* フィルターバー */
+.filter-bar {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--app-text-secondary);
+
+    input[type='date'] {
+      padding: 8px 10px;
+      border: 1px solid var(--app-color-neutral);
+      border-radius: 6px;
+    }
+  }
+}
+
+.search-btn {
+  padding: 8px 20px;
+  background: var(--app-color-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* サマリーバー */
+.summary-bar {
+  background: var(--app-color-secondary);
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: var(--app-text-primary);
+}
+
+/* チャートエリア */
+.chart-section {
+  margin-bottom: 30px;
+
+  h3 {
+    margin: 0 0 12px;
+    color: var(--app-text-primary);
+  }
+}
+
+/* 日別リスト */
+.day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.day-block {
+  border: 1px solid #ddd;
+  border-radius: var(--app-border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--app-shadow-card);
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.day-label {
+  color: var(--app-text-primary);
+}
+
+.day-total {
+  color: var(--app-color-primary);
+}
+
+.record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f9f9f9;
+}
+
+.record-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: var(--app-border-radius-md);
+  padding: 10px 14px;
+}
+
+.record-desc {
+  font-size: 14px;
+  color: var(--app-text-primary);
+  margin-bottom: 4px;
+}
+
+.record-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--app-text-secondary);
+}
+
+.record-duration {
+  font-weight: bold;
+  color: var(--app-color-primary);
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
-  .charts-container {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .chart-wrapper {
     height: 250px;
-  }
-
-  .week-header {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
   }
 }
