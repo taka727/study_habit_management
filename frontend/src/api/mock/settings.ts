@@ -8,7 +8,7 @@ export interface User {
   updated_at: string
 }
 
-let user: User = {
+const user: User = {
   id: 1,
   name: 'テストユーザー',
   login_name: 'testuser',
