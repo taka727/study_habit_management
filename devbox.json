@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/main/.schema/devbox.schema.json",
+  "packages": [
+    "nodejs@22",
+    "mysql84@latest",
+    "openssl@latest",
+    "awscli2@latest",
+    "python@3.13",
+    "git@latest",
+    "bash@latest",
+    "prisma-engines@latest"
+  ],
+  "shell": {
+    "init_hook": [
+      "export PRISMA_QUERY_ENGINE_BINARY=\"$(which query-engine)\"",
+      "export PRISMA_SCHEMA_ENGINE_BINARY=\"$(which schema-engine)\"",
+      "export PRISMA_QUERY_ENGINE_LIBRARY=\"$(dirname \"$(which query-engine)\")/../lib/libquery_engine.node\"",
+      "echo '========================================================'",
+      "echo ' 💡 Study Habit Management 開発環境 (Devbox) が起動しました'",
+      "echo \" Node.js: $(node -v)\"",
+      "echo \" MySQL CLI: $(mysql --version | awk '{print $3}')\"",
+      "echo '========================================================'"
+    ]
+  }
+}

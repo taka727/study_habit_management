@@ -11,6 +11,17 @@
 
 ## セットアップ
 
+### 0. 開発環境の起動 (Devbox)
+開発に必要なツール(Node.js 22 / MySQL 8.4 / Python 3.13 / AWS CLI など)は [Devbox](https://www.jetify.com/devbox) で管理しています。
+
+```bash
+# Devboxのインストール(未導入の場合)
+curl -fsSL https://get.jetify.com/devbox | bash
+
+# 開発シェルに入る(以降のコマンドはこのシェル内で実行)
+devbox shell
+```
+
 ### 1. Backend設定
 ```bash
 cd backend
@@ -39,6 +50,7 @@ npm test
 - `backend/` - Node.js APIサーバー
 - `frontend/` - Vue.js フロントエンド
 - `document/` - API仕様書・設計書
+- `infra/` - AWS CDK (Python) によるインフラ定義(詳細は `infra/README.md`)
 
 ## API仕様
 `document/OpenAPI/OpenAPI.yaml` を参照

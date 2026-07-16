@@ -1,0 +1,8 @@
+{
+  "name": "study-habit-infra-cli",
+  "private": true,
+  "description": "CDK CLI のバージョン固定用(スタック定義は Python。npx cdk で実行する)",
+  "devDependencies": {
+    "aws-cdk": "2.1130.0"
+  }
+}
