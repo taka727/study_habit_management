@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import apiClient from '../api/client'
-
-interface Book {
-  id: number
-  title: string
-  description: string | null
-}
+import type { ApiBookMutationResponse, ApiListResponse, Book, BookFormPayload } from '@/types'
 
 const books = ref<Book[]>([])
 const isLoading = ref(false)
@@ -23,7 +18,7 @@ async function fetchBooks() {
   isLoading.value = true
   error.value = null
   try {
-    const response = await apiClient.get<{ status: string; data: Book[] }>('/books')
+    const response = await apiClient.get<ApiListResponse<Book>>('/books')
     books.value = response.data.data
   } catch {
     error.value = '書籍の取得に失敗しました'
@@ -40,10 +35,11 @@ async function addBook() {
   }
 
   try {
-    const response = await apiClient.post<{ status: string; book: Book }>('/books', {
+    const payload: BookFormPayload = {
       title: newTitle.value.trim(),
       description: newDescription.value.trim() || null,
-    })
+    }
+    const response = await apiClient.post<ApiBookMutationResponse<Book>>('/books', payload)
     books.value.push(response.data.book)
 
     // 成功したらフォームをリセット

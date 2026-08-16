@@ -1,18 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import apiClient from '../api/client'
+import type { ApiItemResponse, ApiListResponse, Task, TaskFormPayload, TaskStatus } from '@/types'
 
-type Status = 'TODO' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
-
-interface Task {
-  id: number
-  name: string
-  description: string | null
-  status: Status
-  exec_expected_date: string | null
-  deadline: string | null
-  category: string | null
-}
+type Status = TaskStatus
 
 const STATUS_LABELS: Record<Status, string> = {
   TODO: '未着手',
@@ -30,10 +21,10 @@ const activeStatus = ref<Status | 'ALL'>('ALL')
 
 const showForm = ref(false)
 const editingId = ref<number | null>(null)
-const form = ref({
+const form = ref<TaskFormPayload>({
   taskTitle: '',
   taskDescription: '',
-  taskStatusId: 'TODO' as Status,
+  taskStatusId: 'TODO',
   taskStartTime: '',
   taskEndTime: '',
 })
@@ -57,7 +48,7 @@ async function fetchTasks() {
   isLoading.value = true
   error.value = null
   try {
-    const response = await apiClient.get<{ status: string; data: Task[] }>('/tasks')
+    const response = await apiClient.get<ApiListResponse<Task>>('/tasks')
     tasks.value = response.data.data
   } catch {
     error.value = 'タスクの取得に失敗しました'
@@ -95,14 +86,14 @@ async function submitForm() {
   error.value = null
   try {
     if (editingId.value !== null) {
-      const response = await apiClient.put<{ status: string; data: Task }>(
+      const response = await apiClient.put<ApiItemResponse<Task>>(
         `/tasks/${editingId.value}`,
         form.value,
       )
       const idx = tasks.value.findIndex((t) => t.id === editingId.value)
       if (idx !== -1) tasks.value[idx] = response.data.data
     } else {
-      const response = await apiClient.post<{ status: string; data: Task }>('/tasks', form.value)
+      const response = await apiClient.post<ApiItemResponse<Task>>('/tasks', form.value)
       tasks.value.push(response.data.data)
     }
     showForm.value = false

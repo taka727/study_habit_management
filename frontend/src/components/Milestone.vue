@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import apiClient from '../api/client'
-
-interface Goal {
-  id: number
-  name: string
-  description: string | null
-  goal_deadline: string
-}
+import type { ApiGoalMutationResponse, ApiListResponse, Goal, GoalFormPayload } from '@/types'
 
 const goals = ref<Goal[]>([])
 const isLoading = ref(false)
@@ -29,7 +23,7 @@ async function fetchGoals() {
   isLoading.value = true
   error.value = null
   try {
-    const response = await apiClient.get<{ status: string; data: Goal[] }>('/goals')
+    const response = await apiClient.get<ApiListResponse<Goal>>('/goals')
     goals.value = response.data.data
   } catch {
     error.value = 'マイルストーンの取得に失敗しました'
@@ -58,20 +52,20 @@ async function submitForm() {
   if (!form.value.name.trim() || !form.value.goal_deadline) return
   error.value = null
   try {
-    const payload = {
+    const payload: GoalFormPayload = {
       name: form.value.name.trim(),
       description: form.value.description.trim() || null,
       goal_deadline: form.value.goal_deadline,
     }
     if (editingId.value !== null) {
-      const response = await apiClient.put<{ status: string; Goal: Goal }>(
+      const response = await apiClient.put<ApiGoalMutationResponse<Goal>>(
         `/goals/${editingId.value}`,
         payload,
       )
       const idx = goals.value.findIndex((g) => g.id === editingId.value)
       if (idx !== -1) goals.value[idx] = response.data.Goal
     } else {
-      const response = await apiClient.post<{ status: string; Goal: Goal }>('/goals', payload)
+      const response = await apiClient.post<ApiGoalMutationResponse<Goal>>('/goals', payload)
       goals.value.push(response.data.Goal)
     }
     showForm.value = false
