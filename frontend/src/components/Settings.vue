@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import apiClient from '../api/client'
-
-interface User {
-  id: number
-  name: string
-  login_name: string
-}
+import type { ApiItemResponse, User, UserUpdatePayload } from '@/types'
 
 const user = ref<User | null>(null)
 const isLoading = ref(false)
@@ -20,7 +15,7 @@ async function fetchUser() {
   isLoading.value = true
   error.value = null
   try {
-    const response = await apiClient.get<{ status: string; data: User }>('/user')
+    const response = await apiClient.get<ApiItemResponse<User>>('/user')
     user.value = response.data.data
     editName.value = user.value.name
     editLoginName.value = user.value.login_name
@@ -35,10 +30,11 @@ async function saveUser() {
   error.value = null
   saveSuccess.value = false
   try {
-    const response = await apiClient.put<{ status: string; data: User }>('/user', {
+    const payload: UserUpdatePayload = {
       name: editName.value,
       login_name: editLoginName.value,
-    })
+    }
+    const response = await apiClient.put<ApiItemResponse<User>>('/user', payload)
     user.value = response.data.data
     saveSuccess.value = true
     setTimeout(() => (saveSuccess.value = false), 3000)

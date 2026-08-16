@@ -1,12 +1,6 @@
 // Settings.vue 用モックハンドラー (/user)
 
-export interface User {
-  id: number
-  name: string
-  login_name: string
-  created_at: string
-  updated_at: string
-}
+import type { ApiItemResponse, ApiMockResponse, User, UserUpdatePayload } from '@/types'
 
 const user: User = {
   id: 1,
@@ -20,17 +14,19 @@ export function handleSettings(
   method: string,
   url: string,
   body?: unknown,
-): Record<string, unknown> | null {
+): ApiMockResponse | null {
   if (method === 'GET' && url === '/user') {
-    return { status: 'success', data: { ...user } }
+    const response: ApiItemResponse<User> = { status: 'success', data: { ...user } }
+    return response
   }
 
   if (method === 'PUT' && url === '/user') {
-    const { name, login_name } = body as { name?: string; login_name?: string }
+    const { name, login_name } = body as UserUpdatePayload
     if (name) user.name = name
     if (login_name) user.login_name = login_name
     user.updated_at = new Date().toISOString()
-    return { status: 'success', data: { ...user } }
+    const response: ApiItemResponse<User> = { status: 'success', data: { ...user } }
+    return response
   }
 
   return null

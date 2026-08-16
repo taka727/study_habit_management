@@ -1,10 +1,6 @@
 // Reading.vue 用モックハンドラー (/books)
 
-export interface Book {
-  id: number
-  title: string
-  description: string | null
-}
+import type { ApiBookMutationResponse, ApiListResponse, ApiMessageResponse, ApiMockResponse, Book, BookFormPayload } from '@/types'
 
 const seed: Book[] = [
   { id: 1, title: 'JavaScript完全ガイド', description: 'JavaScriptの基礎から応用まで丁寧に解説' },
@@ -19,16 +15,18 @@ export function handleBooks(
   method: string,
   url: string,
   body?: unknown,
-): Record<string, unknown> | null {
+): ApiMockResponse | null {
   if (method === 'GET' && url === '/books') {
-    return { status: 'success', data: [...books] }
+    const response: ApiListResponse<Book> = { status: 'success', data: [...books] }
+    return response
   }
 
   if (method === 'POST' && url === '/books') {
-    const { title, description } = body as { title: string; description: string | null }
+    const { title, description } = body as BookFormPayload
     const book: Book = { id: nextId++, title, description: description ?? null }
     books.push(book)
-    return { status: 'success', book }
+    const response: ApiBookMutationResponse<Book> = { status: 'success', book }
+    return response
   }
 
   const idMatch = url.match(/^\/books\/(\d+)$/)
@@ -38,14 +36,16 @@ export function handleBooks(
     if (method === 'PUT') {
       const index = books.findIndex((b) => b.id === id)
       if (index === -1) return null
-      const { title, description } = body as { title: string; description: string | null }
+      const { title, description } = body as BookFormPayload
       books[index] = { id, title, description: description ?? null }
-      return { status: 'success', book: books[index] }
+      const response: ApiBookMutationResponse<Book> = { status: 'success', book: books[index] }
+      return response
     }
 
     if (method === 'DELETE') {
       books = books.filter((b) => b.id !== id)
-      return { status: 'success' }
+      const response: ApiMessageResponse = { status: 'success' }
+      return response
     }
   }
 

@@ -1,4 +1,10 @@
 // History.vue 用モックハンドラー (/history)
+//
+// StudyHistory はこの機能単独のドメイン型であり、本Issue（#64）の対象範囲（
+// api/task/user/book/goal）には含まれないため src/types/ への移設は行わない。
+// レスポンス封筒の型（ApiMockResponse）のみ共通型を参照する。
+
+import type { ApiMockResponse } from '@/types'
 
 export interface StudyHistory {
   id: number
@@ -59,7 +65,7 @@ export function handleHistory(
   method: string,
   url: string,
   body?: unknown,
-): Record<string, unknown> | null {
+): ApiMockResponse | null {
   const baseMatch = url === '/history' || url.startsWith('/history?')
 
   if (method === 'GET' && baseMatch) {
