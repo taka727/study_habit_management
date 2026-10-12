@@ -8,7 +8,7 @@ class StudyHabitStack(cdk.Stack):
     今後ここに以下のようなリソースを追加していく想定:
     - VPC / サブネット
     - バックエンド(Express + Prisma)の実行環境(ECS Fargate など。Dockerfile あり)
-    - データベース(MySQL 8.4 互換の RDS / Aurora)
+    - データベース(MySQL 8.0 互換の RDS / Aurora)
     - フロントエンド(Vue + Vite)の配信(S3 + CloudFront など)
     - シークレット管理(DATABASE_URL などを Secrets Manager へ)
     """
