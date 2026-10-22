@@ -18,7 +18,8 @@ cd infra
 python3 -m venv .venv
 source .venv/bin/activate        # Windows の場合は .venv\Scripts\activate.bat(または source.bat)
 
-# 依存パッケージ
+# 依存パッケージ(venv 作成直後の pip は古いことがあるため、先に pip を更新する)
+python -m pip install --upgrade pip
 pip install -r requirements.txt -r requirements-dev.txt
 
 # CDK CLI(バージョン固定)
