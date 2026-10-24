@@ -3,17 +3,21 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Node.js 22.23.4（2026-10-21 のセキュリティリリース）を含む nixpkgs の master コミット。
+    # nixos-unstable に 22.23.4 以降が入ったら、この入力を消して pkgs.nodejs_22 に戻す。
+    nixpkgs-nodejs.url = "github:nixos/nixpkgs/4c0aafebb03dcc7fba1c8dfb5946d1cd0daa4b05";
   };
 
-  outputs = inputs@{ self, nixpkgs, ... }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-nodejs, ... }:
     let
       system = "aarch64-darwin"; # M3 Mac用
       pkgs = nixpkgs.legacyPackages.${system};
+      nodejsPkgs = nixpkgs-nodejs.legacyPackages.${system};
     in
     {
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
-          pkgs.nodejs_22          # 統一されたNode.jsランタイム
+          nodejsPkgs.nodejs_22    # 統一されたNode.jsランタイム
           pkgs.mysql84            # サポート期間内のMySQL 8.4（クライアントツール・mysqladmin用）
           pkgs.openssl            # Prismaの動作に必須のライブラリ
 	  pkgs.git                # nix環境内でもgitを使えるように
